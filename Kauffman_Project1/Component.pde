@@ -4,6 +4,7 @@ abstract class Component {
   String name = "";
   boolean isVisible = false;
   color fill = WHITE;
+  float angleToTarget = 0;
   
   abstract void update();
   
@@ -18,5 +19,12 @@ abstract class Component {
   void setColor(color fill){
   
     this.fill = fill;
+  }
+  
+  float findAngleToTarget(PVector target, float x, float y) { 
+    float dx = target.x - x;
+    float dy = target.y - y;
+    angleToTarget = atan2(dy, dx);
+    return angleToTarget;
   }
 }

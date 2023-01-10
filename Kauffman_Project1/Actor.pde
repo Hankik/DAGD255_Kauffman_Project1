@@ -4,6 +4,7 @@ class Actor {
   String name = "";
   HashMap<String, Component> components = new HashMap();
   PVector location = new PVector(width/2,height/2);
+  float angleToTarget = 0;
   
   Actor(){
     
@@ -11,14 +12,12 @@ class Actor {
   }
   
   void update(){
-    updateComponents();
+    updateComponents(); // update all components
   }
   
   void draw(){
     
-    pushMatrix();
-    drawComponents(location.x, location.y);  // by drawing components within matrix, all component transforms should be relative
-    popMatrix();
+    drawComponents(location.x, location.y);  // draw components
   }
   
   // A method to call each component's update method
@@ -40,7 +39,7 @@ class Actor {
     return this; // Actor return type allows for chaining addComponent() calls
   }
   
-  // If using this method, always check for possibility of NULL
+  // If using method to receive component, always account for possibility of NULL
   Component getComponent(String name){
   
     if (components.containsKey(name)) return components.get(name);
@@ -48,4 +47,11 @@ class Actor {
     println(this.name + " could not find component '" + name + "'.");
     return null;
   }
+  
+  void findAngleToTarget(float x, float y) {
+    float dx = x - location.x;
+    float dy = y - location.y;
+    angleToTarget = atan2(dy, dx);
+  }
+  
 }
