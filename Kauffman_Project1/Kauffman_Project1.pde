@@ -21,6 +21,7 @@
 // Grab libraries
 
 // Initialize global objects
+Frog frog;
 
 // Color constants
 final color RED = #bf616a;
@@ -36,15 +37,19 @@ final color LIGHTGREEN = #d9e68f;
 final color PINK = #db96ad;
 final color LIGHTBLUE = #92cade;
 final color LIGHTRED = #FF8C8C;
+final color TONGUE = #c0003f;
 
 // Setup project
 void setup(){
   size(1200,800);
   
+  frog = new Frog();
   
 }
 
 // Primary game loop
 void draw(){
   background(0);
+  
+  frog.update();
 }

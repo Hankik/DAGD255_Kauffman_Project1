@@ -3,6 +3,7 @@ class Actor {
   // variables
   String name = "";
   HashMap<String, Component> components = new HashMap();
+  PVector location = new PVector(width/2,height/2);
   
   Actor(){
     
@@ -16,18 +17,19 @@ class Actor {
   void draw(){
     
     pushMatrix();
-    drawComponents();  // by drawing components within matrix, all component transforms should be relative
+    drawComponents(location.x, location.y);  // by drawing components within matrix, all component transforms should be relative
     popMatrix();
   }
   
+  // A method to call each component's update method
   void updateComponents(){
     
     components.forEach((name, c) -> c.update());
   }
   
-  void drawComponents(){
+  void drawComponents(float x, float y){
     
-    components.forEach((name, c) -> c.draw());
+    components.forEach((name, c) -> c.draw(x, y));
   }
   
   // A method to add components to actor

@@ -1,8 +1,22 @@
 abstract class Component {
 
+  // variables
   String name = "";
+  boolean isVisible = false;
+  color fill = WHITE;
   
-  void update() {}
+  abstract void update();
   
-  void draw() {}
+  abstract void draw(float x, float y);
+  
+  // a method to determine if component needs drawn
+  void setVisibility(boolean isVisible){
+  
+    this.isVisible = isVisible;
+  }
+  
+  void setColor(color fill){
+  
+    this.fill = fill;
+  }
 }
