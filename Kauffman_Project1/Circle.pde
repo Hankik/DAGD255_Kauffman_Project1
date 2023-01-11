@@ -2,9 +2,9 @@ class Circle extends Component {
 
   // variables
   float r;
-  
-  Circle(float r){
-    
+
+  Circle(float r) {
+
     this.r = r;
   }
 
@@ -12,12 +12,18 @@ class Circle extends Component {
   }
 
   void draw(float x, float y) {
-    
-    circle(x, y, r);
+    if (isVisible) {
+
+      pushMatrix();
+      translate(x, y);
+      fill(fill);
+      circle(0 - r/2, 0 - r/2, r);
+      popMatrix();
+    }
   }
-  
+
   // when using, pass in owning actor location for x and y
-  boolean checkCollision(float x, float y, float otherX, float otherY){
+  boolean checkCollision(float x, float y, float otherX, float otherY) {
     if (dist(x, y, otherX, otherY) <= r) return true;
     else return false;
   }

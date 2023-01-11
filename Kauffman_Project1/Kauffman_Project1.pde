@@ -23,6 +23,8 @@ import javax.swing.JOptionPane;
 
 // Initialize global objects
 Frog frog;
+ArrayList<Fly> flies = new ArrayList();
+
 float dt;
 float prevTime = 0;
 boolean isPaused = false;
@@ -53,15 +55,26 @@ void setup() {
   log = loadImage("log.png");
   swamp = loadImage("swamp.jpg");
   swamp.resize(1200, 800);
+  
+  for (int i = 0; i < 10; i++){
+    Fly f = new Fly();
+    flies.add(f);
+  }
 }
 
 // Primary game loop
 void draw() {
   background(BLUE);
   calcDeltaTime();
-
+  
   image(swamp, 0,0);
   image(log, width/2 - 64, height/2 - 16);
+  
+  for (Fly f : flies) {
+  
+    f.update();
+  }
+  
   frog.update();
 }
 

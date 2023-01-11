@@ -64,6 +64,7 @@ class FrogTongue extends Component {  // NEEDS MORE COMMENTING
       fill(TONGUE);
       rotate(findAngleToTarget(targetLocation, x, y));
       rect(2, -2, dist(x, y, targetLocation.x, targetLocation.y), tongueWidth);
+      stroke(4);
       popMatrix();
     } else if (state == TongueState.PULL) {
 
@@ -73,6 +74,7 @@ class FrogTongue extends Component {  // NEEDS MORE COMMENTING
       fill(TONGUE);
       rotate(findAngleToTarget(targetLocation, x, y));
       rect(2, -2, dist(x, y, targetLocation.x, targetLocation.y) * tongueLength, tongueWidth);
+      stroke(4);
       popMatrix();
     }
   }
