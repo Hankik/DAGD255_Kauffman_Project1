@@ -107,23 +107,21 @@ class FrogTongue extends Component {  // NEEDS MORE COMMENTING
   }
 
   void findTarget() {
-    if (target == null) {
+    //if (target == null) {
       targetLocation.x = mouseX;
       targetLocation.y = mouseY;
-    } else {
-      targetLocation.x = target.location.x;
-      targetLocation.y = target.location.y;
-    }
+    //} else {
+      //targetLocation.x = target.location.x;
+      //targetLocation.y = target.location.y;
+    //}
   }
   
-//  void findTip(){
-//    if (target != null) {
-//      tip.x = cos(findAngleToTarget(frog.location, target.location.x, target.location.y))
-//              * dist(frog.location.x, frog.location.y, target.location.x, target.location.y);
-//      tip.y = sin(findAngleToTarget(frog.location, target.location.x, target.location.y))
-//              * dist(frog.location.x, frog.location.y, target.location.x, target.location.y);
-//    }
-//  }
+  void findTip(){
+    if (target != null) {
+      tip.x = lerp(target.location.x, 0, tongueLength);
+      tip.y = lerp(target.location.y, 0, tongueLength);
+    }
+  }
 }
 
 public enum TongueState {

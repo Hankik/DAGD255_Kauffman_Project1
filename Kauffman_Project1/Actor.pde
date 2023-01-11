@@ -23,12 +23,19 @@ class Actor {
   // A method to call each component's update method
   void updateComponents(){
     
-    components.forEach((name, c) -> c.update());
+    //components.forEach((name, c) -> c.update()); // Procesing 3 can't do lambda expressions
+    for (Map.Entry<String, Component> entry : components.entrySet()) {
+      entry.getValue().update();
+    }
   }
   
   void drawComponents(float x, float y){
     
-    components.forEach((name, c) -> c.draw(x, y));
+    //components.forEach((name, c) -> c.draw(x, y)); // Processing 3 can't do lambda expressions
+    for (Map.Entry<String, Component> entry : components.entrySet()) {
+    
+      entry.getValue().draw(x, y);
+    }
   }
   
   // A method to add components to actor

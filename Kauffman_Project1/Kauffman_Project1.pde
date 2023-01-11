@@ -20,6 +20,8 @@
 
 // Grab libraries
 import javax.swing.JOptionPane;
+import java.util.Map;
+import java.util.HashMap;
 
 // Initialize global objects
 Frog frog;
@@ -95,7 +97,7 @@ void mouseReleased() {
   if (frog.tongue.state == TongueState.ATTACK) {
     for (Fly fly : flies) {
       if (fly.body.checkCollision(fly.location.x, fly.location.y, mouseX, mouseY)) {
-        //frog.tongue.target = fly;
+        frog.tongue.target = fly;
         fly.mouseReleased();
         break;
       }
