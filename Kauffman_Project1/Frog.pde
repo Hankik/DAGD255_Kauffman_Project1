@@ -9,23 +9,17 @@ class Frog extends Actor {
   Frog() {
 
     name = "frog";
-    addComponent(body);
-    addComponent(tongue);
+    addComponent(body)
+      .addComponent(tongue);
   }
 
   void update() {
     super.update(); // perform actor super class updates
 
-    if (mousePressed && body.checkCollision(location.x, location.y, mouseX, mouseY)) {  // MOVE THIS TO ITS OWN METHOD
-      tongue.setVisibility(true);
-      tongue.targetLocation = new PVector(mouseX, mouseY);
-    } else {
-      tongue.setVisibility(false);
-    }
 
 
-      super.draw(); // perform actor super class draws
     draw();
+    super.draw(); // perform actor super class draws
   }
 
   void draw() {
@@ -34,29 +28,90 @@ class Frog extends Actor {
     image(sprite, location.x - 32, location.y - 32);
     popMatrix();
   }
+
+  void mousePressed() {
+    if (body.checkCollision(location.x, location.y, mouseX, mouseY)) {
+      tongue.state = TongueState.ATTACK;
+    }
+  }
+
+  void mouseReleased() {
+  }
 }
 
-class FrogTongue extends Component {
+class FrogTongue extends Component {  // NEEDS MORE COMMENTING
 
   // variables
-  PVector targetLocation = new PVector();
+  PVector targetLocation = new PVector(0, 0);
   Actor target = null;
-  float tongueWidth = 20;
+  TongueState state = TongueState.IDLE;
+  float tongueWidth = 4;
+  float tongueLength = 1;
 
   FrogTongue() {
   }
 
   void update() {
+    handleState(state);
   }
 
   void draw(float x, float y) {
-    if (isVisible) {
+    if (state == TongueState.ATTACK) {
 
       pushMatrix();
+      translate(x, y);
+      noStroke();
       fill(TONGUE);
-      rect(x, y, dist(x, y, targetLocation.x, targetLocation.y), tongueWidth);
       rotate(findAngleToTarget(targetLocation, x, y));
+      rect(2, -2, dist(x, y, targetLocation.x, targetLocation.y), tongueWidth);
+      popMatrix();
+    } else if (state == TongueState.PULL) {
+
+      pushMatrix();
+      translate(x, y);
+      noStroke();
+      fill(TONGUE);
+      rotate(findAngleToTarget(targetLocation, x, y));
+      rect(2, -2, dist(x, y, targetLocation.x, targetLocation.y) * tongueLength, tongueWidth);
       popMatrix();
     }
   }
+
+  void handleState(TongueState state) {
+
+    switch (state) {
+
+    case ATTACK:
+      setVisibility(true);
+      if (mousePressed) findTarget();
+      else this.state = TongueState.PULL;
+      break;
+    case PULL:
+      tongueLength -= dt * 2.2;
+      if (tongueLength <= 0) {
+        this.state = TongueState.IDLE;
+      }
+      break;
+    case IDLE:
+      tongueLength = 1;
+      setVisibility(false);
+      break;
+    }
+  }
+
+  void findTarget() {
+    if (target == null) {
+      targetLocation.x = mouseX;
+      targetLocation.y = mouseY;
+    } else {
+      targetLocation.x = target.location.x;
+      targetLocation.y = target.location.y;
+    }
+  }
+}
+
+public enum TongueState {
+  ATTACK,
+    PULL,
+    IDLE
 }

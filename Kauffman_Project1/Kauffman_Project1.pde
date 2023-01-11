@@ -1,27 +1,33 @@
-/* 
-  Project 1 - Mouse-based Arcade Game
-  Hank Kauffman - DAGD 255
-  1/9/2023
-  
-  Copyright 2023 Henry Kauffman
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
+/*
+ Project 1 - Mouse-based Arcade Game
+ Hank Kauffman - DAGD 255
+ 1/9/2023
+ 
+ Copyright 2023 Henry Kauffman
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+ http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 
 // Grab libraries
+import javax.swing.JOptionPane;
 
 // Initialize global objects
 Frog frog;
+float dt;
+float prevTime = 0;
+boolean isPaused = false;
+PImage log;
+PImage swamp;
 
 // Color constants
 final color RED = #bf616a;
@@ -40,16 +46,40 @@ final color LIGHTRED = #FF8C8C;
 final color TONGUE = #c0003f;
 
 // Setup project
-void setup(){
-  size(1200,800);
-  
+void setup() {
+  size(1200, 800);
+
   frog = new Frog();
-  
+  log = loadImage("log.png");
+  swamp = loadImage("swamp.jpg");
+  swamp.resize(1200, 800);
 }
 
 // Primary game loop
-void draw(){
-  background(0);
-  
+void draw() {
+  background(BLUE);
+  calcDeltaTime();
+
+  image(swamp, 0,0);
+  image(log, width/2 - 64, height/2 - 16);
   frog.update();
+}
+
+// A method to get delta time
+void calcDeltaTime() {
+
+  float currTime = millis();
+  dt = (currTime - prevTime) / 1000;
+  prevTime = currTime;
+}
+
+void mousePressed() {
+  frog.mousePressed();
+}
+
+void mouseReleased() {
+  frog.mouseReleased();
+}
+
+void keyPressed() {
 }
