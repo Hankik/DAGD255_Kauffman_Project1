@@ -70,12 +70,12 @@ void draw() {
   image(swamp, 0,0);
   image(log, width/2 - 64, height/2 - 16);
   
+  frog.update();
+  
   for (Fly f : flies) {
   
     f.update();
   }
-  
-  frog.update();
 }
 
 // A method to get delta time
@@ -92,6 +92,15 @@ void mousePressed() {
 
 void mouseReleased() {
   frog.mouseReleased();
+  if (frog.tongue.state == TongueState.ATTACK) {
+    for (Fly fly : flies) {
+      if (fly.body.checkCollision(fly.location.x, fly.location.y, mouseX, mouseY)) {
+        //frog.tongue.target = fly;
+        fly.mouseReleased();
+        break;
+      }
+    }
+  }
 }
 
 void keyPressed() {

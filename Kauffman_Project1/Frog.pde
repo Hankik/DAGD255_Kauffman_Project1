@@ -11,6 +11,8 @@ class Frog extends Actor {
     name = "frog";
     addComponent(body)
       .addComponent(tongue);
+      
+    body.setVisibility(true); // THIS DOESNT WORK FOR SOME REASON 
   }
 
   void update() {
@@ -43,6 +45,7 @@ class FrogTongue extends Component {  // NEEDS MORE COMMENTING
 
   // variables
   PVector targetLocation = new PVector(0, 0);
+  PVector tip = new PVector(0,0);
   Actor target = null;
   TongueState state = TongueState.IDLE;
   float tongueWidth = 4;
@@ -62,6 +65,7 @@ class FrogTongue extends Component {  // NEEDS MORE COMMENTING
       translate(x, y);
       noStroke();
       fill(TONGUE);
+      circle(tip.x, tip.y, 6);
       rotate(findAngleToTarget(targetLocation, x, y));
       rect(2, -2, dist(x, y, targetLocation.x, targetLocation.y), tongueWidth);
       stroke(4);
@@ -72,6 +76,7 @@ class FrogTongue extends Component {  // NEEDS MORE COMMENTING
       translate(x, y);
       noStroke();
       fill(TONGUE);
+      circle(tip.x, tip.y, 6);
       rotate(findAngleToTarget(targetLocation, x, y));
       rect(2, -2, dist(x, y, targetLocation.x, targetLocation.y) * tongueLength, tongueWidth);
       stroke(4);
@@ -110,6 +115,15 @@ class FrogTongue extends Component {  // NEEDS MORE COMMENTING
       targetLocation.y = target.location.y;
     }
   }
+  
+//  void findTip(){
+//    if (target != null) {
+//      tip.x = cos(findAngleToTarget(frog.location, target.location.x, target.location.y))
+//              * dist(frog.location.x, frog.location.y, target.location.x, target.location.y);
+//      tip.y = sin(findAngleToTarget(frog.location, target.location.x, target.location.y))
+//              * dist(frog.location.x, frog.location.y, target.location.x, target.location.y);
+//    }
+//  }
 }
 
 public enum TongueState {

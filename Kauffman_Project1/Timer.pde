@@ -5,6 +5,7 @@ class Timer {
   float timeLeft;
   boolean isDone = true;
   boolean autoRestart = false;
+  boolean isPaused = false;
 
   Timer(float duration) {
 
@@ -15,19 +16,21 @@ class Timer {
 
   void update() {
 
-    if (timeLeft <= 0) {
+    if (!isPaused) {
 
-      isDone = true;
+      if (timeLeft <= 0) {
 
-      // USE EVENT PATTERN HERE
+        isDone = true;
 
-      if (autoRestart) reset();
-    } else {
+        // USE EVENT PATTERN HERE
 
-      if (!isDone) {
-        
-        timeLeft -= dt;
-        
+        if (autoRestart) reset();
+      } else {
+
+        if (!isDone) {
+
+          timeLeft -= dt;
+        }
       }
     }
   }
