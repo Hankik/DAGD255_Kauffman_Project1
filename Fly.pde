@@ -2,11 +2,13 @@ class Fly extends Actor {
 
   // variables
   PImage sprite = loadImage("fly.png");
-  Circle body = new Circle(32);
+  Circle body = new Circle(16);
   PVector direction;
   float speed = 30;
+  float distFromFrog;
   Timer changeDirection = new Timer(5);
   boolean collisionEnabled = false;
+  boolean isDead = false;
 
   // constructor
   Fly() {
@@ -56,6 +58,7 @@ class Fly extends Actor {
     move(direction.x, direction.y);
 
     if (collisionEnabled) checkCollision();
+    if (distFromFrog < 32) isDead = true; // CHANGE TO DIE METHOD TO PERFORM ANIM, SOUND, ETC
 
     super.draw();
     draw();
@@ -83,6 +86,16 @@ class Fly extends Actor {
     location.y += moveAmt.y * dt * speed;
     moveAmt.mult(0);
   }
+  
+  // A method to calculate distance from frog
+  float getDistanceFromFrog(Actor f){
+    if (f.name.equals("frog")){
+      distFromFrog = dist(f.location.x, f.location.y, location.x, location.y);
+      return distFromFrog;
+    }
+    println("Frog not found.");
+    return 0;
+  }
 
   void checkCollision() {
 
@@ -103,6 +116,9 @@ class Fly extends Actor {
       setDirection(random(-1, 1), 1);
     }
   }
+  
+  // 
+  void death(){}
 
   void mouseReleased() {
     changeDirection.isPaused = true;

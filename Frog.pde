@@ -78,7 +78,9 @@ class FrogTongue extends Component {  // NEEDS MORE COMMENTING
       fill(TONGUE);
       circle(tip.x, tip.y, 6);
       rotate(findAngleToTarget(targetLocation, x, y));
-      rect(2, -2, dist(x, y, targetLocation.x, targetLocation.y) * tongueLength, tongueWidth);
+      if (target == null) rect(2, -2, dist(x, y, targetLocation.x, targetLocation.y) * tongueLength, tongueWidth);
+      else rect(2, -2, dist(x, y, target.location.x, target.location.y) * tongueLength, tongueWidth);
+      
       stroke(4);
       popMatrix();
     }
@@ -94,12 +96,14 @@ class FrogTongue extends Component {  // NEEDS MORE COMMENTING
       else this.state = TongueState.PULL;
       break;
     case PULL:
-      tongueLength -= dt * 2.2;
+      tongueLength -= dt * 1.5;
+      findTip();
       if (tongueLength <= 0) {
         this.state = TongueState.IDLE;
       }
       break;
     case IDLE:
+      target = null;
       tongueLength = 1;
       setVisibility(false);
       break;
@@ -118,8 +122,9 @@ class FrogTongue extends Component {  // NEEDS MORE COMMENTING
   
   void findTip(){
     if (target != null) {
-      tip.x = lerp(target.location.x, 0, tongueLength);
-      tip.y = lerp(target.location.y, 0, tongueLength);
+      
+      target.location.x = lerp(target.location.x, frog.location.x , 1 - tongueLength);
+      target.location.y = lerp(target.location.y, frog.location.y , 1 - tongueLength);
     }
   }
 }

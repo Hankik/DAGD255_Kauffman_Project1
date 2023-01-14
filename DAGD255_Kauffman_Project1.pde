@@ -57,8 +57,8 @@ void setup() {
   log = loadImage("log.png");
   swamp = loadImage("swamp.jpg");
   swamp.resize(1200, 800);
-  
-  for (int i = 0; i < 10; i++){
+
+  for (int i = 0; i < 10; i++) {
     Fly f = new Fly();
     flies.add(f);
   }
@@ -68,15 +68,27 @@ void setup() {
 void draw() {
   background(BLUE);
   calcDeltaTime();
-  
-  image(swamp, 0,0);
+
+  image(swamp, 0, 0);
   image(log, width/2 - 64, height/2 - 16);
-  
+
   frog.update();
-  
+
   for (Fly f : flies) {
-  
+    f.getDistanceFromFrog(frog);
     f.update();
+  }
+
+  cullBugs();
+}
+
+void cullBugs() {
+  for (int i = flies.size() - 1; i >= 0; i--) {
+    if (flies.get(i).isDead) {
+      flies.remove(i);
+      println(flies.size());
+    }
+    if (flies.size() < 10) flies.add(new Fly());
   }
 }
 
