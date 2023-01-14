@@ -27,12 +27,13 @@ class Frog extends Actor {
   void draw() {
 
     pushMatrix();
-    image(sprite, location.x - 32, location.y - 32);
+    image(sprite, location.x - body.r, location.y - body.r);
     popMatrix();
   }
 
   void mousePressed() {
-    if (body.checkCollision(location.x, location.y, mouseX, mouseY)) {
+    if (body.checkCollision(location.x - body.r/2, location.y - body.r/2, mouseX, mouseY)) {
+      tongue.tongueLength = 1;
       tongue.state = TongueState.ATTACK;
     }
   }
@@ -64,6 +65,7 @@ class FrogTongue extends Component {  // NEEDS MORE COMMENTING
       pushMatrix();
       translate(x, y);
       noStroke();
+      text(tongueLength, 0, -100);
       fill(TONGUE);
       circle(tip.x, tip.y, 6);
       rotate(findAngleToTarget(targetLocation, x, y));
@@ -98,7 +100,7 @@ class FrogTongue extends Component {  // NEEDS MORE COMMENTING
     case PULL:
       tongueLength -= dt * 1.5;
       findTip();
-      if (tongueLength <= 0) {
+      if (tongueLength <= 0 ) {
         this.state = TongueState.IDLE;
       }
       break;

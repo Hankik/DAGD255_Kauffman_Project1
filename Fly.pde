@@ -15,6 +15,8 @@ class Fly extends Actor {
 
     name = "fly";
     addComponent(body);
+    
+    body.setVisibility(true);
 
 
     int rand = floor(random(4));

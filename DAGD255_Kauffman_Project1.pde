@@ -88,7 +88,7 @@ void cullBugs() {
       flies.remove(i);
       println(flies.size());
     }
-    if (flies.size() < 10) flies.add(new Fly());
+    //if (flies.size() < 10) flies.add(new Fly());
   }
 }
 
