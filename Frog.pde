@@ -17,11 +17,7 @@ class Frog extends Actor {
 
   void update() {
     super.update(); // perform actor super class updates
-
-
-
-    draw();
-    super.draw(); // perform actor super class draws
+    
   }
 
   void draw() {
@@ -29,6 +25,7 @@ class Frog extends Actor {
     pushMatrix();
     image(sprite, location.x - body.r, location.y - body.r);
     popMatrix();
+    super.draw(); // perform actor super class draws
   }
 
   void mousePressed() {

@@ -26,6 +26,7 @@ import java.util.HashMap;
 // Initialize global objects
 Frog frog;
 ArrayList<Bug> bugList = new ArrayList();
+ArrayList<Popup> popUps = new ArrayList();
 float dt;
 float prevTime = 0;
 boolean isPaused = false;
@@ -81,16 +82,43 @@ void draw() {
   }
 
   cullBugs();
+  
+  for (Popup p : popUps){
+    p.update();
+  }
+  
+  
+  frog.draw();
+  for (Bug f : bugList) {
+    f.draw();
+  }
+  
+  for (Popup p : popUps){
+    p.draw();
+  }
+  
+  cullPopUps();
 }
 
 void cullBugs() {
   for (int i = bugList.size() - 1; i >= 0; i--) {
-    if (bugList.get(i).isDead) {
-      //points.addPoints(flies.get(i).name, flies.get(i).location.x, flies.get(i).location.y);
+    if (bugList.get(i).isDead) {      
+      popUps.add(new Popup(bugList.get(i).location.x, bugList.get(i).location.y, "+3", 20));
       bugList.remove(i);
-      println(bugList.size());
+      println("bugList: " + bugList.size());
     }
-    //if (flies.size() < 10) flies.add(new Fly());
+  }
+}
+
+void cullPopUps() {
+
+  for (int i = popUps.size() - 1; i >= 0; i--) {
+  
+    if (popUps.get(i).isDead) {
+    
+      popUps.remove(i);
+      println("popUps: " + popUps.size());
+    }
   }
 }
 

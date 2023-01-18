@@ -8,33 +8,33 @@ class Bug extends Actor {
   float distFromFrog;
   Timer changeDirection = new Timer(5);
   boolean collisionEnabled = false;
-  boolean hidden = false;
   boolean isFacingRight = true;
 
   // constructor
   Bug() {
-
     name = "fly";
     addComponent(body);
-    
+    //body.setVisibility(true);
+
     int bugSwitcher = floor(random(4));
-    
+
     switch (bugSwitcher) {
-    
+
       case (0): // WASP
       sprite = loadImage("wasp.png");
-      sprite.resize(32,32);
+      sprite.resize(32, 32);
       break;
       case (1): // FLY
       sprite = loadImage("fly.png");
       break;
       case (2): // DRAGONFLY
       sprite = loadImage("dragonfly.png");
-      sprite.resize(32,32);
+      speed *= 3;
+      sprite.resize(32, 32);
       break;
       case (3): // PONDSKIPPER
       sprite = loadImage("pondskipper.png");
-      sprite.resize(32,32);
+      sprite.resize(32, 32);
       break;
     }
 
@@ -85,22 +85,19 @@ class Bug extends Actor {
 
     if (collisionEnabled) checkCollision();
     if (distFromFrog < 32) isDead = true; // CHANGE TO DIE METHOD TO PERFORM ANIM, SOUND, ETC
-
-    super.draw();
-    draw();
   }
 
   void draw() {
 
+    super.draw();
     pushMatrix();
     translate(location.x, location.y);
-    if (!hidden) {
-      if (!isFacingRight) {
-        translate(sprite.width/2, 0);
-        scale(-1, 1);
-        image(sprite, 0 - body.r/2, 0 - body.r/2);
-      } else image(sprite, 0 - body.r/2, 0 - body.r/2);
-    }
+    if (!isFacingRight) {
+      translate(sprite.width/2, 0);
+      scale(-1, 1);
+      image(sprite, 0 - body.r/2, 0 - body.r/2);
+    } else image(sprite, 0 - body.r/2, 0 - body.r/2);
+
     popMatrix();
   }
 
@@ -139,8 +136,8 @@ class Bug extends Actor {
       location.x = body.r/2;
       setDirection(1, random(-1, 1));
     }
-    if (location.y + body.r/2 > height) { // BOTTOM
-      location.y = height - body.r/2;
+    if (location.y + body.r > height) { // BOTTOM
+      location.y = height - body.r;
       setDirection(random(-1, 1), -1);
     }
     if (location.y - body.r/2 < 0) { // TOP
