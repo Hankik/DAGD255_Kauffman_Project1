@@ -12,7 +12,7 @@ class Actor {
   }
   
   void update(){
-    updateComponents(); // update all components
+    updateComponents(location.x, location.y); // update all components
   }
   
   void draw(){
@@ -21,11 +21,11 @@ class Actor {
   }
   
   // A method to call each component's update method
-  void updateComponents(){
+  void updateComponents(float x, float y){
     
     //components.forEach((name, c) -> c.update()); // Procesing 3 can't do lambda expressions
     for (Map.Entry<String, Component> entry : components.entrySet()) {
-      entry.getValue().update();
+      entry.getValue().update(x, y);
     }
   }
   
