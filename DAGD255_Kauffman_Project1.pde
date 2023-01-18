@@ -58,7 +58,7 @@ void setup() {
   swamp = loadImage("swamp.jpg");
   swamp.resize(1200, 800);
 
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 20; i++) {
     Bug f = new Bug();
     bugList.add(f);
     loop();
@@ -82,28 +82,39 @@ void draw() {
   }
 
   cullBugs();
-  
-  for (Popup p : popUps){
+
+  for (Popup p : popUps) {
     p.update();
   }
-  
-  
+
+
   frog.draw();
   for (Bug f : bugList) {
     f.draw();
   }
-  
-  for (Popup p : popUps){
+
+  for (Popup p : popUps) {
     p.draw();
   }
-  
+
   cullPopUps();
 }
 
-void cullBugs() {
+void cullBugs() { // REFACTOR DEATH LOGIC TO A DEATH METHOD INSIDE BUG
   for (int i = bugList.size() - 1; i >= 0; i--) {
-    if (bugList.get(i).isDead) {      
-      popUps.add(new Popup(bugList.get(i).location.x, bugList.get(i).location.y, "+3", 20));
+    if (bugList.get(i).isDead) {
+      if (bugList.get(i).name.equals("wasp")) {
+        for (Bug b : bugList) {
+          if (b.name.equals("wasp")){
+            b.isAngry = true;
+            b.speed = 60;
+            b.angerTimer.reset();
+          }
+        }
+        if (bugList.get(i).isAngry) popUps.add(new Popup(bugList.get(i).location.x, bugList.get(i).location.y, "-3", 20));
+      } else {
+        popUps.add(new Popup(bugList.get(i).location.x, bugList.get(i).location.y, "+3", 20));
+      }
       bugList.remove(i);
       println("bugList: " + bugList.size());
     }
@@ -113,9 +124,9 @@ void cullBugs() {
 void cullPopUps() {
 
   for (int i = popUps.size() - 1; i >= 0; i--) {
-  
+
     if (popUps.get(i).isDead) {
-    
+
       popUps.remove(i);
       println("popUps: " + popUps.size());
     }
