@@ -1,7 +1,7 @@
 class Fly extends Actor {
 
   // variables
-  PImage sprite = loadImage("fly.png");
+  PImage sprite = loadImage("fly.png"); // All images must be 32 x 32
   Circle body = new Circle(16);
   PVector direction;
   float speed = 30;
@@ -12,8 +12,6 @@ class Fly extends Actor {
 
   // constructor
   Fly() {
-
-    name = "fly";
     addComponent(body);
     
     
@@ -26,17 +24,21 @@ class Fly extends Actor {
       case (0): // WASP
       sprite = loadImage("wasp.png");
       sprite.resize(32,32);
+      name = "wasp";
       break;
       case (1): // FLY
       sprite = loadImage("fly.png");
+      name = "fly";
       break;
       case (2): // DRAGONFLY
       sprite = loadImage("dragonfly.png");
       sprite.resize(32,32);
+      name = "dragonfly";
       break;
       case (3): // PONDSKIPPER
       sprite = loadImage("pondskipper.png");
       sprite.resize(32,32);
+      name = "pondskipper";
       break;
     }
 
