@@ -1,44 +1,40 @@
-class Fly extends Actor {
+class Bug extends Actor {
 
   // variables
-  PImage sprite = loadImage("fly.png"); // All images must be 32 x 32
+  PImage sprite = loadImage("fly.png");
   Circle body = new Circle(16);
   PVector direction;
   float speed = 30;
   float distFromFrog;
   Timer changeDirection = new Timer(5);
   boolean collisionEnabled = false;
-  boolean isDead = false;
+  boolean isFacingRight = true;
 
   // constructor
-  Fly() {
+  Bug() {
+    name = "fly";
     addComponent(body);
-    
-    
-    body.setVisibility(true);
-    
+    //body.setVisibility(true);
+
     int bugSwitcher = floor(random(4));
-    
+
     switch (bugSwitcher) {
-    
+
       case (0): // WASP
       sprite = loadImage("wasp.png");
-      sprite.resize(32,32);
-      name = "wasp";
+      sprite.resize(32, 32);
       break;
       case (1): // FLY
       sprite = loadImage("fly.png");
-      name = "fly";
       break;
       case (2): // DRAGONFLY
       sprite = loadImage("dragonfly.png");
-      sprite.resize(32,32);
-      name = "dragonfly";
+      speed *= 3;
+      sprite.resize(32, 32);
       break;
       case (3): // PONDSKIPPER
       sprite = loadImage("pondskipper.png");
-      sprite.resize(32,32);
-      name = "pondskipper";
+      sprite.resize(32, 32);
       break;
     }
 
@@ -55,16 +51,19 @@ class Fly extends Actor {
       location.x = width + body.r/2;
       location.y = random(height);
       direction = new PVector(-1, random(-1, 1));
+      flipSprite();
       break;
       case(2): // TOP
       location.x = random(width);
       location.y = 0 - body.r/2;
       direction = new PVector(random(-1, 1), 1);
+      flipSprite();
       break;
       case(3): // BOTTOM
       location.x = random(width);
       location.y = height + body.r/2;
       direction = new PVector(random(-1, 1), -1);
+      flipSprite();
       break;
     }
   }
@@ -78,6 +77,7 @@ class Fly extends Actor {
       setDirection(direction.x + random(-.2, .2), direction.y + random(-.2, .2));
       changeDirection.reset();
     }
+    flipSprite();
 
 
 
@@ -85,16 +85,19 @@ class Fly extends Actor {
 
     if (collisionEnabled) checkCollision();
     if (distFromFrog < 32) isDead = true; // CHANGE TO DIE METHOD TO PERFORM ANIM, SOUND, ETC
-
-    super.draw();
-    draw();
   }
 
   void draw() {
 
+    super.draw();
     pushMatrix();
     translate(location.x, location.y);
-    image(sprite, 0 - body.r/2, 0 - body.r/2);
+    if (!isFacingRight) {
+      translate(sprite.width/2, 0);
+      scale(-1, 1);
+      image(sprite, 0 - body.r/2, 0 - body.r/2);
+    } else image(sprite, 0 - body.r/2, 0 - body.r/2);
+
     popMatrix();
   }
 
@@ -112,10 +115,10 @@ class Fly extends Actor {
     location.y += moveAmt.y * dt * speed;
     moveAmt.mult(0);
   }
-  
+
   // A method to calculate distance from frog
-  float getDistanceFromFrog(Actor f){
-    if (f.name.equals("frog")){
+  float getDistanceFromFrog(Actor f) {
+    if (f.name.equals("frog")) {
       distFromFrog = dist(f.location.x, f.location.y, location.x, location.y);
       return distFromFrog;
     }
@@ -133,8 +136,8 @@ class Fly extends Actor {
       location.x = body.r/2;
       setDirection(1, random(-1, 1));
     }
-    if (location.y + body.r/2 > height) { // BOTTOM
-      location.y = height - body.r/2;
+    if (location.y + body.r > height) { // BOTTOM
+      location.y = height - body.r;
       setDirection(random(-1, 1), -1);
     }
     if (location.y - body.r/2 < 0) { // TOP
@@ -142,9 +145,22 @@ class Fly extends Actor {
       setDirection(random(-1, 1), 1);
     }
   }
-  
-  // 
-  void death(){}
+
+  //
+  void death() {
+  }
+
+  void flipSprite() {
+
+    if (isFacingRight && direction.x < 0) {
+
+      isFacingRight = false;
+    }
+    if (!isFacingRight && direction.x > 0) {
+
+      isFacingRight = true;
+    }
+  }
 
   void mouseReleased() {
     changeDirection.isPaused = true;

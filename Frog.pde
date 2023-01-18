@@ -17,11 +17,7 @@ class Frog extends Actor {
 
   void update() {
     super.update(); // perform actor super class updates
-
-
-
-    draw();
-    super.draw(); // perform actor super class draws
+    
   }
 
   void draw() {
@@ -29,6 +25,7 @@ class Frog extends Actor {
     pushMatrix();
     image(sprite, location.x - body.r, location.y - body.r);
     popMatrix();
+    super.draw(); // perform actor super class draws
   }
 
   void mousePressed() {
@@ -55,7 +52,7 @@ class FrogTongue extends Component {  // NEEDS MORE COMMENTING
   FrogTongue() {
   }
 
-  void update() {
+  void update(float x, float y) {
     handleState(state);
   }
 
@@ -65,9 +62,7 @@ class FrogTongue extends Component {  // NEEDS MORE COMMENTING
       pushMatrix();
       translate(x, y);
       noStroke();
-      text(tongueLength, 0, -100);
       fill(TONGUE);
-      circle(tip.x, tip.y, 6);
       rotate(findAngleToTarget(targetLocation, x, y));
       rect(2, -2, dist(x, y, targetLocation.x, targetLocation.y), tongueWidth);
       stroke(4);
@@ -113,13 +108,8 @@ class FrogTongue extends Component {  // NEEDS MORE COMMENTING
   }
 
   void findTarget() {
-    //if (target == null) {
       targetLocation.x = mouseX;
       targetLocation.y = mouseY;
-    //} else {
-      //targetLocation.x = target.location.x;
-      //targetLocation.y = target.location.y;
-    //}
   }
   
   void findTip(){

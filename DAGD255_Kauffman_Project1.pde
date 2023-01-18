@@ -1,5 +1,5 @@
 /*
- Project 1 - Mouse-based Arcade Game
+ Project 1 - Game
  Hank Kauffman - DAGD 255
  1/9/2023
  
@@ -25,8 +25,8 @@ import java.util.HashMap;
 
 // Initialize global objects
 Frog frog;
-ArrayList<Fly> flies = new ArrayList();
-
+ArrayList<Bug> bugList = new ArrayList();
+ArrayList<Popup> popUps = new ArrayList();
 float dt;
 float prevTime = 0;
 boolean isPaused = false;
@@ -59,13 +59,15 @@ void setup() {
   swamp.resize(1200, 800);
 
   for (int i = 0; i < 10; i++) {
-    Fly f = new Fly();
-    flies.add(f);
+    Bug f = new Bug();
+    bugList.add(f);
+    loop();
   }
 }
 
 // Primary game loop
 void draw() {
+
   background(BLUE);
   calcDeltaTime();
 
@@ -74,21 +76,49 @@ void draw() {
 
   frog.update();
 
-  for (Fly f : flies) {
+  for (Bug f : bugList) {
     f.getDistanceFromFrog(frog);
     f.update();
   }
 
   cullBugs();
+  
+  for (Popup p : popUps){
+    p.update();
+  }
+  
+  
+  frog.draw();
+  for (Bug f : bugList) {
+    f.draw();
+  }
+  
+  for (Popup p : popUps){
+    p.draw();
+  }
+  
+  cullPopUps();
 }
 
 void cullBugs() {
-  for (int i = flies.size() - 1; i >= 0; i--) {
-    if (flies.get(i).isDead) {
-      flies.remove(i);
-      println(flies.size());
+  for (int i = bugList.size() - 1; i >= 0; i--) {
+    if (bugList.get(i).isDead) {      
+      popUps.add(new Popup(bugList.get(i).location.x, bugList.get(i).location.y, "+3", 20));
+      bugList.remove(i);
+      println("bugList: " + bugList.size());
     }
-    //if (flies.size() < 10) flies.add(new Fly());
+  }
+}
+
+void cullPopUps() {
+
+  for (int i = popUps.size() - 1; i >= 0; i--) {
+  
+    if (popUps.get(i).isDead) {
+    
+      popUps.remove(i);
+      println("popUps: " + popUps.size());
+    }
   }
 }
 
@@ -107,7 +137,7 @@ void mousePressed() {
 void mouseReleased() {
   frog.mouseReleased();
   if (frog.tongue.state == TongueState.ATTACK) {
-    for (Fly fly : flies) {
+    for (Bug fly : bugList) {
       if (fly.body.checkCollision(fly.location.x, fly.location.y, mouseX, mouseY)) {
         frog.tongue.target = fly;
         fly.mouseReleased();
@@ -117,5 +147,11 @@ void mouseReleased() {
   }
 }
 
-void keyPressed() {
+public void keyPressed() {
+  if (key == 'p') {
+    isPaused = !isPaused;
+
+    if (isPaused) noLoop();
+    else loop();
+  }
 }
