@@ -16,12 +16,34 @@ class Fly extends Actor {
     name = "fly";
     addComponent(body);
     
+    
     body.setVisibility(true);
+    
+    int bugSwitcher = floor(random(4));
+    
+    switch (bugSwitcher) {
+    
+      case (0): // WASP
+      sprite = loadImage("wasp.png");
+      sprite.resize(32,32);
+      break;
+      case (1): // FLY
+      sprite = loadImage("fly.png");
+      break;
+      case (2): // DRAGONFLY
+      sprite = loadImage("dragonfly.png");
+      sprite.resize(32,32);
+      break;
+      case (3): // PONDSKIPPER
+      sprite = loadImage("pondskipper.png");
+      sprite.resize(32,32);
+      break;
+    }
 
 
-    int rand = floor(random(4));
+    int spawnSwitcher = floor(random(4));
 
-    switch (rand) {
+    switch (spawnSwitcher) {
       case(0): // LEFT
       location.x = 0 - body.r/2;
       location.y = random(height);
