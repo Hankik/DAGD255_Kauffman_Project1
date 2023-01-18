@@ -6,7 +6,7 @@ abstract class Component {
   color fill = WHITE;
   float angleToTarget = 0;
   
-  abstract void update();
+  abstract void update(float x, float y);
   
   abstract void draw(float x, float y);
   

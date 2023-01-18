@@ -9,14 +9,14 @@ class Fly extends Actor {
   Timer changeDirection = new Timer(5);
   boolean collisionEnabled = false;
   boolean isDead = false;
+  boolean hidden = false;
+  boolean isFacingRight = true;
 
   // constructor
   Fly() {
 
     name = "fly";
     addComponent(body);
-    
-    
     body.setVisibility(true);
     
     int bugSwitcher = floor(random(4));
@@ -53,16 +53,19 @@ class Fly extends Actor {
       location.x = width + body.r/2;
       location.y = random(height);
       direction = new PVector(-1, random(-1, 1));
+      flipSprite();
       break;
       case(2): // TOP
       location.x = random(width);
       location.y = 0 - body.r/2;
       direction = new PVector(random(-1, 1), 1);
+      flipSprite();
       break;
       case(3): // BOTTOM
       location.x = random(width);
       location.y = height + body.r/2;
       direction = new PVector(random(-1, 1), -1);
+      flipSprite();
       break;
     }
   }
@@ -76,6 +79,7 @@ class Fly extends Actor {
       setDirection(direction.x + random(-.2, .2), direction.y + random(-.2, .2));
       changeDirection.reset();
     }
+    flipSprite();
 
 
 
@@ -92,7 +96,13 @@ class Fly extends Actor {
 
     pushMatrix();
     translate(location.x, location.y);
-    image(sprite, 0 - body.r/2, 0 - body.r/2);
+    if (!hidden) {
+      if (!isFacingRight) {
+        translate(sprite.width/2, 0);
+        scale(-1, 1);
+        image(sprite, 0 - body.r/2, 0 - body.r/2);
+      } else image(sprite, 0 - body.r/2, 0 - body.r/2);
+    }
     popMatrix();
   }
 
@@ -110,10 +120,10 @@ class Fly extends Actor {
     location.y += moveAmt.y * dt * speed;
     moveAmt.mult(0);
   }
-  
+
   // A method to calculate distance from frog
-  float getDistanceFromFrog(Actor f){
-    if (f.name.equals("frog")){
+  float getDistanceFromFrog(Actor f) {
+    if (f.name.equals("frog")) {
       distFromFrog = dist(f.location.x, f.location.y, location.x, location.y);
       return distFromFrog;
     }
@@ -140,9 +150,22 @@ class Fly extends Actor {
       setDirection(random(-1, 1), 1);
     }
   }
-  
-  // 
-  void death(){}
+
+  //
+  void death() {
+  }
+
+  void flipSprite() {
+
+    if (isFacingRight && direction.x < 0) {
+
+      isFacingRight = false;
+    }
+    if (!isFacingRight && direction.x > 0) {
+
+      isFacingRight = true;
+    }
+  }
 
   void mouseReleased() {
     changeDirection.isPaused = true;

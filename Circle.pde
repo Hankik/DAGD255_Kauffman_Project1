@@ -8,7 +8,7 @@ class Circle extends Component {
     this.r = r;
   }
 
-  void update() {
+  void update(float x, float y) {
   }
 
   void draw(float x, float y) {
