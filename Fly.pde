@@ -1,4 +1,4 @@
-class Bug extends Actor {
+class Fly extends Actor {
 
   // variables
   PImage sprite = loadImage("fly.png");
@@ -13,7 +13,7 @@ class Bug extends Actor {
   boolean isFacingRight = true;
 
   // constructor
-  Bug() {
+  Fly() {
 
     name = "fly";
     addComponent(body);
