@@ -25,7 +25,7 @@ import java.util.HashMap;
 
 // Initialize global objects
 Frog frog;
-ArrayList<Fly> bugList = new ArrayList();
+ArrayList<Bug> bugList = new ArrayList();
 float dt;
 float prevTime = 0;
 boolean isPaused = false;
@@ -58,7 +58,7 @@ void setup() {
   swamp.resize(1200, 800);
 
   for (int i = 0; i < 10; i++) {
-    Fly f = new Fly();
+    Bug f = new Bug();
     bugList.add(f);
     loop();
   }
@@ -75,7 +75,7 @@ void draw() {
 
   frog.update();
 
-  for (Fly f : bugList) {
+  for (Bug f : bugList) {
     f.getDistanceFromFrog(frog);
     f.update();
   }
@@ -109,7 +109,7 @@ void mousePressed() {
 void mouseReleased() {
   frog.mouseReleased();
   if (frog.tongue.state == TongueState.ATTACK) {
-    for (Fly fly : bugList) {
+    for (Bug fly : bugList) {
       if (fly.body.checkCollision(fly.location.x, fly.location.y, mouseX, mouseY)) {
         frog.tongue.target = fly;
         fly.mouseReleased();

@@ -27,4 +27,12 @@ class Circle extends Component {
     if (dist(x + r/2, y + r/2, otherX, otherY) <= r) return true;
     else return false;
   }
+  
+//  boolean checkCollision(PVector location, PVector otherLocation){
+  
+//    float dx = otherLocation.x - location.x;
+//    float dy = otherLocation.y - location.y;
+//    float dist = sqrt(dx 
+//    return true;
+//  }
 }

@@ -1,4 +1,4 @@
-class Fly extends Actor {
+class Bug extends Actor {
 
   // variables
   PImage sprite = loadImage("fly.png");
@@ -8,16 +8,14 @@ class Fly extends Actor {
   float distFromFrog;
   Timer changeDirection = new Timer(5);
   boolean collisionEnabled = false;
-  boolean isDead = false;
   boolean hidden = false;
   boolean isFacingRight = true;
 
   // constructor
-  Fly() {
+  Bug() {
 
     name = "fly";
     addComponent(body);
-    body.setVisibility(true);
     
     int bugSwitcher = floor(random(4));
     
