@@ -115,8 +115,8 @@ class FrogTongue extends Component {  // NEEDS MORE COMMENTING
   void findTip(){
     if (target != null) {
       
-      target.location.x = lerp(target.location.x, frog.location.x , 1 - tongueLength);
-      target.location.y = lerp(target.location.y, frog.location.y , 1 - tongueLength);
+      target.location.x = lerp(target.location.x, levels[currentLevel].frog.location.x , 1 - tongueLength);
+      target.location.y = lerp(target.location.y, levels[currentLevel].frog.location.y , 1 - tongueLength);
     }
   }
 }

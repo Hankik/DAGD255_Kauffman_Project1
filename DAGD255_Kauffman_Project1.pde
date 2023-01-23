@@ -24,11 +24,9 @@ import java.util.Map;
 import java.util.HashMap;
 
 // Initialize global objects
-Frog frog;
-ArrayList<Level> levels = new ArrayList();
-ArrayList<Bug> bugList = new ArrayList();
-ArrayList<Popup> popUps = new ArrayList();
 final int LEVEL_AMOUNT = 7;
+Level[] levels = new Level[7];
+int currentLevel = 0;
 float dt;
 float prevTime = 0;
 boolean isPaused = false;
@@ -54,22 +52,14 @@ final color TONGUE = #c0003f;
 // Setup project
 void setup() {
   size(1200, 800);
-
-  frog = new Frog();
+  
+  for (int i = 0; i < LEVEL_AMOUNT; i++){
+    levels[i] = new Level(i + 1);
+  }
+  
   log = loadImage("log.png");
   swamp = loadImage("swamp.jpg");
   swamp.resize(1200, 800);
-  
-  for (int i = 0; i < LEVEL_AMOUNT; i++) {
-  
-    Level l = new Level(i + 1);
-    levels.add(l);
-  }
-
-  for (int i = 0; i < 20; i++) {
-    Bug f = new Bug();
-    bugList.add(f);
-  }
 }
 
 // Primary game loop
@@ -80,53 +70,9 @@ void draw() {
 
   image(swamp, 0, 0);
   image(log, width/2 - 64, height/2 - 16);
-
-  frog.update();
-
-  for (Bug f : bugList) {
-    f.getDistanceFromFrog(frog);
-    f.update();
-  }
-
-  cullBugs();
-
-  for (Popup p : popUps) {
-    p.update();
-  }
-
-
-  frog.draw();
-  for (Bug f : bugList) {
-    f.draw();
-  }
-
-  for (Popup p : popUps) {
-    p.draw();
-  }
-
-  cullPopUps();
-}
-
-void cullBugs() { // REFACTOR DEATH LOGIC TO A DEATH METHOD INSIDE BUG
-  for (int i = bugList.size() - 1; i >= 0; i--) {
-    if (bugList.get(i).isDead) {
-      popUps.add(new Popup(bugList.get(i).location.x, bugList.get(i).location.y, Float.toString(bugList.get(i).value), 20));
-      bugList.remove(i);
-      println("bugList: " + bugList.size());
-    }
-  }
-}
-
-void cullPopUps() {
-
-  for (int i = popUps.size() - 1; i >= 0; i--) {
-
-    if (popUps.get(i).isDead) {
-
-      popUps.remove(i);
-      println("popUps: " + popUps.size());
-    }
-  }
+  
+  levels[currentLevel].update();
+  levels[currentLevel].draw();
 }
 
 // A method to get delta time
@@ -138,27 +84,9 @@ void calcDeltaTime() {
 }
 
 void mousePressed() {
-  frog.mousePressed();
+  levels[currentLevel].mousePressed();
 }
 
 void mouseReleased() {
-  frog.mouseReleased();
-  if (frog.tongue.state == TongueState.ATTACK) {
-    for (Bug fly : bugList) {
-      if (fly.body.checkCollision(fly.location.x, fly.location.y, mouseX, mouseY)) {
-        frog.tongue.target = fly;
-        fly.mouseReleased();
-        break;
-      }
-    }
-  }
-}
-
-public void keyPressed() {
-  if (key == 'p') {
-    isPaused = !isPaused;
-
-    if (isPaused) noLoop();
-    else loop();
-  }
+  levels[currentLevel].mouseReleased();
 }
