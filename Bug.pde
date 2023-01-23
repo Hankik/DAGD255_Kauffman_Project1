@@ -15,20 +15,48 @@ class Bug extends Actor {
   float value = 3; // point value of bug
 
   Bug(HashMap<String, Integer> spawns) {
+    
+    addComponent(body);
+    
+    int accumulator = 0; // adds previous spawn chance to the next bug type
+    
+    for (Map.Entry<String, Integer> spawn : spawns.entrySet()) {
 
-    spawns.forEach( (name, rate) -> {
 
-      
-      int spawn = floor(random(rate));
-      if (spawn == 0) {
-        
-        //isSpawned = true;
-      }
-
-      if (!isSpawned) {
+      int rand = floor(random(100));
+      if (rand <= spawn.getValue() + accumulator) {
+        name = spawn.getKey();
+      } else {
+        accumulator += spawn.getValue();
       }
     }
-    );
+    
+    angerImg.resize(24, 24);
+
+    switch (name) {
+
+      case "wasp":
+      sprite = loadImage("wasp.png");
+      sprite.resize(32, 32);
+      angerTimer = new Timer(7);
+      break;
+      case "fly":
+      sprite = loadImage("fly.png");
+      break;
+      case "dragonfly":
+      sprite = loadImage("dragonfly.png");
+      speed *= 3;
+      sprite.resize(32, 32);
+      break;
+      case "pondskipper":
+      sprite = loadImage("pondskipper.png");
+      sprite.resize(32, 32);
+      break;
+    }
+
+    getSpawnLocation();
+    
+    
   }
 
   // constructor

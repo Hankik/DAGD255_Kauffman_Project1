@@ -25,8 +25,10 @@ import java.util.HashMap;
 
 // Initialize global objects
 Frog frog;
+ArrayList<Level> levels = new ArrayList();
 ArrayList<Bug> bugList = new ArrayList();
 ArrayList<Popup> popUps = new ArrayList();
+final int LEVEL_AMOUNT = 7;
 float dt;
 float prevTime = 0;
 boolean isPaused = false;
@@ -57,11 +59,16 @@ void setup() {
   log = loadImage("log.png");
   swamp = loadImage("swamp.jpg");
   swamp.resize(1200, 800);
+  
+  for (int i = 0; i < LEVEL_AMOUNT; i++) {
+  
+    Level l = new Level(i + 1);
+    levels.add(l);
+  }
 
   for (int i = 0; i < 20; i++) {
     Bug f = new Bug();
     bugList.add(f);
-    loop();
   }
 }
 
