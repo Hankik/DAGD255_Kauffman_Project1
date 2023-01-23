@@ -103,18 +103,7 @@ void draw() {
 void cullBugs() { // REFACTOR DEATH LOGIC TO A DEATH METHOD INSIDE BUG
   for (int i = bugList.size() - 1; i >= 0; i--) {
     if (bugList.get(i).isDead) {
-      if (bugList.get(i).name.equals("wasp")) {
-        for (Bug b : bugList) {
-          if (b.name.equals("wasp")){
-            b.isAngry = true;
-            b.speed = 60;
-            b.angerTimer.reset();
-          }
-        }
-        if (bugList.get(i).isAngry) popUps.add(new Popup(bugList.get(i).location.x, bugList.get(i).location.y, "-3", 20));
-      } else {
-        popUps.add(new Popup(bugList.get(i).location.x, bugList.get(i).location.y, "+3", 20));
-      }
+      popUps.add(new Popup(bugList.get(i).location.x, bugList.get(i).location.y, Float.toString(bugList.get(i).value), 20));
       bugList.remove(i);
       println("bugList: " + bugList.size());
     }

@@ -3,15 +3,33 @@ class Bug extends Actor {
   // variables
   PImage sprite = loadImage("fly.png");
   PImage angerImg = loadImage("angry.png");
-  Timer angerTimer; 
+  Timer angerTimer; // timer for wasps' anger mechanic
   Circle body = new Circle(16);
   PVector direction;
   float speed = 30;
-  float distFromFrog;
-  Timer changeDirection = new Timer(5);
-  boolean collisionEnabled = false;
+  float distFromFrog; // used for determining isDead
+  Timer changeDirection = new Timer(5); // used for changing dir every 5 sec
+  boolean collisionEnabled = false; // allows the bug to be in the wall on spawn
   boolean isFacingRight = true;
   boolean isAngry = false;
+  float value = 3; // point value of bug
+
+  Bug(HashMap<String, Integer> spawns) {
+
+    spawns.forEach( (name, rate) -> {
+
+      
+      int spawn = floor(random(rate));
+      if (spawn == 0) {
+        
+        //isSpawned = true;
+      }
+
+      if (!isSpawned) {
+      }
+    }
+    );
+  }
 
   // constructor
   Bug() {
@@ -19,7 +37,9 @@ class Bug extends Actor {
     //body.setVisibility(true);
 
 
-    angerImg.resize(24,24);
+
+
+    angerImg.resize(24, 24);
     int bugSwitcher = floor(random(4));
 
     switch (bugSwitcher) {
@@ -47,6 +67,57 @@ class Bug extends Actor {
       break;
     }
 
+    getSpawnLocation();
+  }
+
+  void update() {
+    super.update();
+
+    if (name.equals("wasp") && isAngry) {
+      angerTimer.update();
+
+      if (angerTimer.isDone) {
+        speed = 30;
+        isAngry = false;
+      }
+    }
+
+    changeDirection.update(); // run the clock on changeDirection
+    if (changeDirection.isDone) { // if done, give new direction
+      collisionEnabled = true; // start checkign for collision
+      setDirection(direction.x + random(-.2, .2), direction.y + random(-.2, .2));
+      changeDirection.reset();
+    }
+    flipSprite();
+
+
+
+    move(direction.x, direction.y);
+
+    if (collisionEnabled) checkCollision();
+    if (distFromFrog < 32 && direction.x == 0 && direction.y == 0) {
+
+      death();
+      isDead = true;
+    }
+  }
+
+  void draw() {
+
+    super.draw();
+    pushMatrix();
+    translate(location.x, location.y);
+    if (!isFacingRight) {
+      translate(sprite.width/2, 0);
+      scale(-1, 1);
+      image(sprite, 0 - body.r/2, 0 - body.r/2);
+    } else image(sprite, 0 - body.r/2, 0 - body.r/2);
+    if (name.equals("wasp") && isAngry) image(angerImg, 0 - body.r, 0 - body.r);
+
+    popMatrix();
+  }
+
+  void getSpawnLocation() {
 
     int spawnSwitcher = floor(random(4));
 
@@ -75,49 +146,6 @@ class Bug extends Actor {
       flipSprite();
       break;
     }
-  }
-
-  void update() {
-    super.update();
-
-    if (name.equals("wasp") && isAngry) {
-      angerTimer.update();
-
-      if (angerTimer.isDone) {
-        speed = 30;
-        isAngry = false;
-      }
-    }
-
-    changeDirection.update(); // run the clock on changeDirection
-    if (changeDirection.isDone) { // if done, give new direction
-      collisionEnabled = true; // start checkign for collision
-      setDirection(direction.x + random(-.2, .2), direction.y + random(-.2, .2));
-      changeDirection.reset();
-    }
-    flipSprite();
-
-
-
-    move(direction.x, direction.y);
-
-    if (collisionEnabled) checkCollision();
-    if (distFromFrog < 32) isDead = true; // CHANGE TO DIE METHOD TO PERFORM ANIM, SOUND, ETC
-  }
-
-  void draw() {
-
-    super.draw();
-    pushMatrix();
-    translate(location.x, location.y);
-    if (!isFacingRight) {
-      translate(sprite.width/2, 0);
-      scale(-1, 1);
-      image(sprite, 0 - body.r/2, 0 - body.r/2);
-    } else image(sprite, 0 - body.r/2, 0 - body.r/2);
-    if (name.equals("wasp") && isAngry) image(angerImg, 0 - body.r, 0 - body.r);
-
-    popMatrix();
   }
 
   void setDirection(float x, float y) {
@@ -167,6 +195,11 @@ class Bug extends Actor {
 
   //
   void death() {
+    if (name.equals("wasp")) {
+      isAngry = true;
+      speed = 60;
+      angerTimer.reset();
+    }
   }
 
   void flipSprite() {

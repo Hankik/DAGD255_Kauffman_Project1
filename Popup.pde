@@ -28,7 +28,7 @@ class Popup extends Actor {
 
     pushMatrix();
     translate(location.x - 20, location.y);
-    fill(WHITE);
+    fill(0);
     textSize(textSize);
     text(text, 0, 0);
 
@@ -36,7 +36,6 @@ class Popup extends Actor {
   }
   
   void growAndShrink(float swapPoint, float changeRate ){
-    
     
     if (timer.timeLeft/timer.duration >= swapPoint) textSize += changeRate;
     if (timer.timeLeft/timer.duration < swapPoint) textSize -= changeRate;
