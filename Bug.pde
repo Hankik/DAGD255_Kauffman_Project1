@@ -12,7 +12,8 @@ class Bug extends Actor {
   boolean collisionEnabled = false; // allows the bug to be in the wall on spawn
   boolean isFacingRight = true;
   boolean isAngry = false;
-  float value = 3; // point value of bug
+  float defaultValue = 3;
+  float value = defaultValue; // point value of bug
 
   Bug(HashMap<String, Integer> spawns) {
     
@@ -39,6 +40,8 @@ class Bug extends Actor {
       sprite = loadImage("wasp.png");
       sprite.resize(32, 32);
       angerTimer = new Timer(7);
+      defaultValue = 6;
+      value = defaultValue;
       break;
       case "fly":
       sprite = loadImage("fly.png");
@@ -56,46 +59,6 @@ class Bug extends Actor {
 
     getSpawnLocation();
     
-    
-  }
-
-  // constructor
-  Bug() {
-    addComponent(body);
-    //body.setVisibility(true);
-
-
-
-
-    angerImg.resize(24, 24);
-    int bugSwitcher = floor(random(4));
-
-    switch (bugSwitcher) {
-
-      case (0): // WASP
-      name = "wasp";
-      sprite = loadImage("wasp.png");
-      sprite.resize(32, 32);
-      angerTimer = new Timer(7);
-      break;
-      case (1): // FLY
-      name = "fly";
-      sprite = loadImage("fly.png");
-      break;
-      case (2): // DRAGONFLY
-      name = "dragonfly";
-      sprite = loadImage("dragonfly.png");
-      speed *= 3;
-      sprite.resize(32, 32);
-      break;
-      case (3): // PONDSKIPPER
-      name = "pondskipper";
-      sprite = loadImage("pondskipper.png");
-      sprite.resize(32, 32);
-      break;
-    }
-
-    getSpawnLocation();
   }
 
   void update() {
@@ -106,6 +69,7 @@ class Bug extends Actor {
 
       if (angerTimer.isDone) {
         speed = 30;
+        value = defaultValue;
         isAngry = false;
       }
     }
@@ -175,6 +139,13 @@ class Bug extends Actor {
       break;
     }
   }
+  
+  void getAngry(){
+  
+    isAngry = true;
+    speed = 180;
+    angerTimer.reset();
+  }
 
   void setDirection(float x, float y) {
 
@@ -219,15 +190,12 @@ class Bug extends Actor {
       location.y = body.r/2;
       setDirection(random(-1, 1), 1);
     }
+    
   }
 
-  //
   void death() {
-    if (name.equals("wasp")) {
-      isAngry = true;
-      speed = 60;
-      angerTimer.reset();
-    }
+    if (name.equals("wasp") && isAngry) value = -3;
+    
   }
 
   void flipSprite() {

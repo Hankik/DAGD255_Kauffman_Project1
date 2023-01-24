@@ -26,7 +26,7 @@ import java.util.HashMap;
 // Initialize global objects
 final int LEVEL_AMOUNT = 7;
 Level[] levels = new Level[7];
-int currentLevel = 0;
+int currentLevel = 2;
 float dt;
 float prevTime = 0;
 boolean isPaused = false;
@@ -54,10 +54,10 @@ void setup() {
   size(1200, 800);
   
   for (int i = 0; i < LEVEL_AMOUNT; i++){
-    levels[i] = new Level(i + 1);
+    levels[i] = new Level(i);
   }
   
-  log = loadImage("log.png");
+  //log = loadImage("log.png");
   swamp = loadImage("swamp.jpg");
   swamp.resize(1200, 800);
 }
@@ -69,7 +69,7 @@ void draw() {
   calcDeltaTime();
 
   image(swamp, 0, 0);
-  image(log, width/2 - 64, height/2 - 16);
+  //image(log, width/2 - 64, height/2 - 16);
   
   levels[currentLevel].update();
   levels[currentLevel].draw();

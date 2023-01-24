@@ -1,7 +1,7 @@
 class Frog extends Actor {
 
   // variables
-  PImage sprite = loadImage("frog.png"); // image size is 64 x 64 pixels
+  PImage sprite = loadImage("frog2.png"); // image size is 64 x 64 pixels
   Circle body = new Circle(32);
   FrogTongue tongue = new FrogTongue();
 

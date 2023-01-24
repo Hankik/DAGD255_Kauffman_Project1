@@ -13,14 +13,14 @@ class Level {
     this.name = name;
 
     switch (name) {
-    case 1: // LEVEL 1
+    case 0: // LEVEL 1
 
       bugAmount = 20;
       bugSpawns.put("fly", 75); // 75% chance to spawn fly
       bugSpawns.put("pondskipper", 25); // 75% + 25% chance to spawn pondskipper
       break;
 
-    case 2: // LEVEL 2... And so on
+    case 1: // LEVEL 2... And so on
 
       bugAmount = 20;
       bugSpawns.put("fly", 50); // 50% chance to spawn fly
@@ -29,31 +29,31 @@ class Level {
       bugSpawns.put("dragonfly", 25); // 100%
       break;
 
-    case 3:
+    case 2:
 
       bugAmount = 30;
       bugSpawns.put("fly", 25);
-      bugSpawns.put("wasp", 25);
-      bugSpawns.put("pondskipper", 25);
+      bugSpawns.put("wasp", 50);
+      bugSpawns.put("pondskipper", 0);
       bugSpawns.put("dragonfly", 25);
+      break;
+
+    case 3:
+
+      bugAmount = 30;
       break;
 
     case 4:
 
-      bugAmount = 30;
+      bugAmount = 35;
       break;
 
     case 5:
 
-      bugAmount = 35;
-      break;
-
-    case 6:
-
       bugAmount = 40;
       break;
 
-    case 7:
+    case 6:
 
       bugAmount = 45;
       break;
@@ -118,7 +118,7 @@ class Level {
     for (int i = bugList.size() - 1; i >= 0; i--) {
       if (bugList.get(i).isDead) {
 
-        if (bugList.get(i).name.equals("wasp")) for (Bug b : bugList) if (b.name.equals("wasp")) b.isAngry = true; // if dead bug is a wasp, find all wasps and make them angry
+        if (bugList.get(i).name.equals("wasp")) for (Bug b : bugList) if (b.name.equals("wasp")) b.getAngry(); // if dead bug is a wasp, find all wasps and make them angry
         popups.add(new Popup(bugList.get(i).location.x, bugList.get(i).location.y, Float.toString(bugList.get(i).value), 20));
 
         bugList.remove(i);
