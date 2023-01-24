@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 // Initialize global objects
+Data data = Data.getInstance();
 final int LEVEL_AMOUNT = 7;
 Level[] levels = new Level[7];
 int currentLevel = 2;
