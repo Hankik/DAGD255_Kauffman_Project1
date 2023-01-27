@@ -1,23 +1,26 @@
 class Bug extends Actor {
 
   // variables
+  Circle body = new Circle(16);
+  Effects effects = new Effects(this);
+  Timer angerTimer; // timer for wasps' anger mechanic
+  Timer changeDirection = new Timer(5); // used for changing dir every 5 sec
   PImage sprite = loadImage("fly.png");
   PImage angerImg = loadImage("angry.png");
-  Timer angerTimer; // timer for wasps' anger mechanic
-  Circle body = new Circle(16);
   PVector direction;
-  float speed = 30;
   float distFromFrog; // used for determining isDead
-  Timer changeDirection = new Timer(5); // used for changing dir every 5 sec
+  float defaultValue = 3;
+  float value = defaultValue; // point value of bug
   boolean collisionEnabled = false; // allows the bug to be in the wall on spawn
   boolean isFacingRight = true;
   boolean isAngry = false;
-  float defaultValue = 3;
-  float value = defaultValue; // point value of bug
 
   Bug(HashMap<String, Integer> spawns) {
     
-    addComponent(body);
+    addComponent(body)
+      .addComponent(effects);
+
+    speed = 30;
     
     int accumulator = 0; // adds previous spawn chance to the next bug type
     
@@ -25,7 +28,7 @@ class Bug extends Actor {
 
 
       int rand = floor(random(100));
-      if (rand <= spawn.getValue() + accumulator) {
+      if (rand < spawn.getValue() + accumulator) {
         name = spawn.getKey();
       } else {
         accumulator += spawn.getValue();
@@ -39,7 +42,7 @@ class Bug extends Actor {
       case "wasp":
       sprite = loadImage("wasp.png");
       sprite.resize(32, 32);
-      angerTimer = new Timer(7);
+      angerTimer = new Timer(random(6,8));
       defaultValue = 6;
       value = defaultValue;
       break;
@@ -143,7 +146,7 @@ class Bug extends Actor {
   void getAngry(){
   
     isAngry = true;
-    speed = 180;
+    effects.give("largeSpeedBoost", random(6,8));
     angerTimer.reset();
   }
 

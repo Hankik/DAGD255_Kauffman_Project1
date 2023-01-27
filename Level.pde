@@ -3,10 +3,10 @@ class Level {
   // variables
   int name;
   int bugAmount;
+  Frog frog = new Frog();
   HashMap<String, Integer> bugSpawns = new HashMap(); // keeps track of which enemies to spawn and at what percent
   ArrayList<Bug> bugList = new ArrayList();
   ArrayList<Popup> popups = new ArrayList();
-  Frog frog = new Frog();
 
   Level(int name) {
 
@@ -33,9 +33,9 @@ class Level {
 
       bugAmount = 30;
       bugSpawns.put("fly", 25);
-      bugSpawns.put("wasp", 50);
-      bugSpawns.put("pondskipper", 0);
-      bugSpawns.put("dragonfly", 25);
+      bugSpawns.put("wasp", 75);
+      //bugSpawns.put("pondskipper", 0);
+      //bugSpawns.put("dragonfly", 0);
       break;
 
     case 3:

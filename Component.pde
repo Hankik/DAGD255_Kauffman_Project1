@@ -2,9 +2,9 @@ abstract class Component {
 
   // variables
   String name = "";
-  boolean isVisible = false;
   color fill = WHITE;
   float angleToTarget = 0;
+  boolean isVisible = false;
   
   abstract void update(float x, float y);
   

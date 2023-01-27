@@ -5,6 +5,7 @@ class Circle extends Component {
 
   Circle(float r) {
 
+    name = "circle";
     this.r = r;
   }
 

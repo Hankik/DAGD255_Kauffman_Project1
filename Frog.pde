@@ -3,7 +3,7 @@ class Frog extends Actor {
   // variables
   PImage sprite = loadImage("frog2.png"); // image size is 64 x 64 pixels
   Circle body = new Circle(32);
-  FrogTongue tongue = new FrogTongue();
+  FrogTongue tongue = new FrogTongue(this);
 
   // constructor
   Frog() {
@@ -12,7 +12,7 @@ class Frog extends Actor {
     addComponent(body)
       .addComponent(tongue);
       
-    body.setVisibility(true); // THIS DOESNT WORK FOR SOME REASON 
+    //body.setVisibility(true); // THIS DOESNT WORK FOR SOME REASON 
   }
 
   void update() {
@@ -42,14 +42,18 @@ class Frog extends Actor {
 class FrogTongue extends Component {  // NEEDS MORE COMMENTING
 
   // variables
+  Actor parent;
+  //Actor target = null;
+  TongueState state = TongueState.IDLE;
+  ArrayList<Actor> targets = new ArrayList();
   PVector targetLocation = new PVector(0, 0);
   PVector tip = new PVector(0,0);
-  Actor target = null;
-  TongueState state = TongueState.IDLE;
   float tongueWidth = 4;
   float tongueLength = 1;
 
-  FrogTongue() {
+  FrogTongue(Actor parent) {
+    
+    this.parent = parent;
   }
 
   void update(float x, float y) {
@@ -57,6 +61,7 @@ class FrogTongue extends Component {  // NEEDS MORE COMMENTING
   }
 
   void draw(float x, float y) {
+    
     if (state == TongueState.ATTACK) {
 
       pushMatrix();
@@ -75,7 +80,7 @@ class FrogTongue extends Component {  // NEEDS MORE COMMENTING
       fill(TONGUE);
       circle(tip.x, tip.y, 6);
       rotate(findAngleToTarget(targetLocation, x, y));
-      if (target == null) rect(2, -2, dist(x, y, targetLocation.x, targetLocation.y) * tongueLength, tongueWidth);
+      if (targets.size() > 0) rect(2, -2, dist(x, y, targetLocation.x, targetLocation.y) * tongueLength, tongueWidth);
       else rect(2, -2, dist(x, y, target.location.x, target.location.y) * tongueLength, tongueWidth);
       
       stroke(4);
@@ -88,21 +93,21 @@ class FrogTongue extends Component {  // NEEDS MORE COMMENTING
     switch (state) {
 
     case ATTACK:
-      setVisibility(true);
-      if (mousePressed) findTarget();
-      else this.state = TongueState.PULL;
+      setVisibility(true); // shows tongue
+      if (mousePressed) findTarget(); // mouse input enters attack state
+      else this.state = TongueState.PULL; // and lack thereof enters pull state
       break;
     case PULL:
-      tongueLength -= dt * 1.5;
+      tongueLength -= dt * 1.5; // tongue is shortened until gone
       findTip();
       if (tongueLength <= 0 ) {
-        this.state = TongueState.IDLE;
+        this.state = TongueState.IDLE; // and enters idle state
       }
       break;
     case IDLE:
-      target = null;
-      tongueLength = 1;
-      setVisibility(false);
+      target = null; // removes target
+      tongueLength = 1; // resets tongue size
+      setVisibility(false); // hides tongue
       break;
     }
   }
@@ -115,8 +120,8 @@ class FrogTongue extends Component {  // NEEDS MORE COMMENTING
   void findTip(){
     if (target != null) {
       
-      target.location.x = lerp(target.location.x, levels[currentLevel].frog.location.x , 1 - tongueLength);
-      target.location.y = lerp(target.location.y, levels[currentLevel].frog.location.y , 1 - tongueLength);
+      target.location.x = lerp(target.location.x, parent.location.x , 1 - tongueLength);
+      target.location.y = lerp(target.location.y, parent.location.y , 1 - tongueLength);
     }
   }
 }

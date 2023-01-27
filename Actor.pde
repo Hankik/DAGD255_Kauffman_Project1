@@ -5,6 +5,7 @@ class Actor {
   HashMap<String, Component> components = new HashMap();
   PVector location = new PVector(width/2,height/2);
   float angleToTarget = 0;
+  float speed;
   boolean isDead = false;
   
   Actor(){

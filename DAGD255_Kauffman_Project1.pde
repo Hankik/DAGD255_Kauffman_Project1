@@ -25,13 +25,15 @@ import java.util.HashMap;
 
 // Initialize global objects
 Data data = Data.getInstance();
+
 final int LEVEL_AMOUNT = 7;
 Level[] levels = new Level[7];
-int currentLevel = 2;
+
+int currentLevel = 2; // 0 - 6 levels
+
 float dt;
 float prevTime = 0;
 boolean isPaused = false;
-PImage log;
 PImage swamp;
 
 // Color constants
@@ -53,12 +55,12 @@ final color TONGUE = #c0003f;
 // Setup project
 void setup() {
   size(1200, 800);
-  
-  for (int i = 0; i < LEVEL_AMOUNT; i++){
+
+  for (int i = 0; i < LEVEL_AMOUNT; i++) {
     levels[i] = new Level(i);
   }
-  
-  //log = loadImage("log.png");
+
+  frameRate(120);
   swamp = loadImage("swamp.jpg");
   swamp.resize(1200, 800);
 }
@@ -70,8 +72,7 @@ void draw() {
   calcDeltaTime();
 
   image(swamp, 0, 0);
-  //image(log, width/2 - 64, height/2 - 16);
-  
+
   levels[currentLevel].update();
   levels[currentLevel].draw();
 }
@@ -82,6 +83,15 @@ void calcDeltaTime() {
   float currTime = millis();
   dt = (currTime - prevTime) / 1000;
   prevTime = currTime;
+}
+
+void keyPressed() {
+
+  if (key == '>') {
+    currentLevel++;
+    if (currentLevel >= levels.length) currentLevel = 0;
+    levels[currentLevel].popups.add(new Popup(width,height, Integer.toString(currentLevel), 40.0));
+  }
 }
 
 void mousePressed() {
