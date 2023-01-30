@@ -6,6 +6,7 @@ class Actor {
   PVector location = new PVector(width/2,height/2);
   float angleToTarget = 0;
   float speed;
+  float r;
   boolean isDead = false;
   
   Actor(){

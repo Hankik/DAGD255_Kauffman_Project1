@@ -71,7 +71,7 @@ class Level {
     frog.update();
 
     for (Bug b : bugList) {
-      b.getDistanceFromFrog(frog);
+      b.getDistances(frog);
       b.update();
     }
 
@@ -106,7 +106,7 @@ class Level {
     if (frog.tongue.state == TongueState.ATTACK) { // only do if tongue was pulled
       for (Bug fly : bugList) {
         if (fly.body.checkCollision(fly.location.x, fly.location.y, mouseX, mouseY)) {
-          frog.tongue.target = fly; // frog tongue can only target one at a time. this must be changed if I want to pull multiple
+          frog.tongue.target = fly; // frog tongue can only target one at a time. 
           fly.mouseReleased();
           break; // this break prevents pulling multiple at the same time
         }

@@ -29,7 +29,7 @@ Data data = Data.getInstance();
 final int LEVEL_AMOUNT = 7;
 Level[] levels = new Level[7];
 
-int currentLevel = 2; // 0 - 6 levels
+int currentLevel = 1; // 0 - 6 levels
 
 float dt;
 float prevTime = 0;

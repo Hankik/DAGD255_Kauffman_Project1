@@ -1,12 +1,13 @@
 class Circle extends Component {
 
   // variables
-  float r;
+  Actor parent;
 
-  Circle(float r) {
+  Circle(Actor parent, float r) {
 
     name = "circle";
-    this.r = r;
+    this.parent = parent;
+    parent.r = r;
   }
 
   void update(float x, float y) {
@@ -18,14 +19,14 @@ class Circle extends Component {
       pushMatrix();
       translate(x, y);
       fill(fill);
-      circle(0 + r/2, 0 + r/2, r*2);
+      circle(0 + parent.r/2, 0 + parent.r/2, parent.r*2);
       popMatrix();
     }
   }
 
   // when using, pass in owning actor location for x and y
   boolean checkCollision(float x, float y, float otherX, float otherY) {
-    if (dist(x + r/2, y + r/2, otherX, otherY) <= r) return true;
+    if (dist(x + parent.r/2, y + parent.r/2, otherX, otherY) <= parent.r) return true;
     else return false;
   }
   

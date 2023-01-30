@@ -2,7 +2,7 @@ class Frog extends Actor {
 
   // variables
   PImage sprite = loadImage("frog2.png"); // image size is 64 x 64 pixels
-  Circle body = new Circle(32);
+  Circle body = new Circle(this, 32);
   FrogTongue tongue = new FrogTongue(this);
 
   // constructor
@@ -23,13 +23,13 @@ class Frog extends Actor {
   void draw() {
 
     pushMatrix();
-    image(sprite, location.x - body.r, location.y - body.r);
+    image(sprite, location.x - r, location.y - r);
     popMatrix();
     super.draw(); // perform actor super class draws
   }
 
   void mousePressed() {
-    if (body.checkCollision(location.x - body.r/2, location.y - body.r/2, mouseX, mouseY)) {
+    if (body.checkCollision(location.x - r/2, location.y - r/2, mouseX, mouseY)) {
       tongue.tongueLength = 1;
       tongue.state = TongueState.ATTACK;
     }
@@ -43,9 +43,9 @@ class FrogTongue extends Component {  // NEEDS MORE COMMENTING
 
   // variables
   Actor parent;
-  //Actor target = null;
+  Actor target = null;
   TongueState state = TongueState.IDLE;
-  ArrayList<Actor> targets = new ArrayList();
+  ArrayList<PVector> rayPoints;
   PVector targetLocation = new PVector(0, 0);
   PVector tip = new PVector(0,0);
   float tongueWidth = 4;
@@ -53,7 +53,15 @@ class FrogTongue extends Component {  // NEEDS MORE COMMENTING
 
   FrogTongue(Actor parent) {
     
+    name = "tongue";
     this.parent = parent;
+    
+    for (int i = 0; i < 15; i++){
+    
+      PVector rayPoint = new PVector();
+      
+    }
+    
   }
 
   void update(float x, float y) {
@@ -80,7 +88,7 @@ class FrogTongue extends Component {  // NEEDS MORE COMMENTING
       fill(TONGUE);
       circle(tip.x, tip.y, 6);
       rotate(findAngleToTarget(targetLocation, x, y));
-      if (targets.size() > 0) rect(2, -2, dist(x, y, targetLocation.x, targetLocation.y) * tongueLength, tongueWidth);
+      if (target == null) rect(2, -2, dist(x, y, targetLocation.x, targetLocation.y) * tongueLength, tongueWidth);
       else rect(2, -2, dist(x, y, target.location.x, target.location.y) * tongueLength, tongueWidth);
       
       stroke(4);

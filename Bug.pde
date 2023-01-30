@@ -1,7 +1,7 @@
 class Bug extends Actor {
 
   // variables
-  Circle body = new Circle(16);
+  Circle body = new Circle(this, 16);
   Effects effects = new Effects(this);
   Timer angerTimer; // timer for wasps' anger mechanic
   Timer changeDirection = new Timer(5); // used for changing dir every 5 sec
@@ -16,14 +16,14 @@ class Bug extends Actor {
   boolean isAngry = false;
 
   Bug(HashMap<String, Integer> spawns) {
-    
+
     addComponent(body)
       .addComponent(effects);
 
     speed = 30;
-    
+
     int accumulator = 0; // adds previous spawn chance to the next bug type
-    
+
     for (Map.Entry<String, Integer> spawn : spawns.entrySet()) {
 
 
@@ -34,34 +34,33 @@ class Bug extends Actor {
         accumulator += spawn.getValue();
       }
     }
-    
+
     angerImg.resize(24, 24);
 
     switch (name) {
 
-      case "wasp":
+    case "wasp":
       sprite = loadImage("wasp.png");
       sprite.resize(32, 32);
-      angerTimer = new Timer(random(6,8));
+      angerTimer = new Timer(random(6, 8));
       defaultValue = 6;
       value = defaultValue;
       break;
-      case "fly":
+    case "fly":
       sprite = loadImage("fly.png");
       break;
-      case "dragonfly":
+    case "dragonfly":
       sprite = loadImage("dragonfly.png");
       speed *= 3;
       sprite.resize(32, 32);
       break;
-      case "pondskipper":
+    case "pondskipper":
       sprite = loadImage("pondskipper.png");
       sprite.resize(32, 32);
       break;
     }
 
     getSpawnLocation();
-    
   }
 
   void update() {
@@ -105,9 +104,9 @@ class Bug extends Actor {
     if (!isFacingRight) {
       translate(sprite.width/2, 0);
       scale(-1, 1);
-      image(sprite, 0 - body.r/2, 0 - body.r/2);
-    } else image(sprite, 0 - body.r/2, 0 - body.r/2);
-    if (name.equals("wasp") && isAngry) image(angerImg, 0 - body.r, 0 - body.r);
+      image(sprite, 0 - r/2, 0 - r/2);
+    } else image(sprite, 0 - r/2, 0 - r/2);
+    if (name.equals("wasp") && isAngry) image(angerImg, 0 - r, 0 - r);
 
     popMatrix();
   }
@@ -118,35 +117,35 @@ class Bug extends Actor {
 
     switch (spawnSwitcher) {
       case(0): // LEFT
-      location.x = 0 - body.r/2;
+      location.x = 0 - r/2;
       location.y = random(height);
       direction = new PVector(1, random(-1, 1));
       break;
       case(1): // RIGHT
-      location.x = width + body.r/2;
+      location.x = width + r/2;
       location.y = random(height);
       direction = new PVector(-1, random(-1, 1));
       flipSprite();
       break;
       case(2): // TOP
       location.x = random(width);
-      location.y = 0 - body.r/2;
+      location.y = 0 - r/2;
       direction = new PVector(random(-1, 1), 1);
       flipSprite();
       break;
       case(3): // BOTTOM
       location.x = random(width);
-      location.y = height + body.r/2;
+      location.y = height + r/2;
       direction = new PVector(random(-1, 1), -1);
       flipSprite();
       break;
     }
   }
-  
-  void getAngry(){
-  
+
+  void getAngry() {
+
     isAngry = true;
-    effects.give("largeSpeedBoost", random(6,8));
+    effects.give("largeSpeedBoost", random(6, 8));
     angerTimer.reset();
   }
 
@@ -166,39 +165,36 @@ class Bug extends Actor {
   }
 
   // A method to calculate distance from frog
-  float getDistanceFromFrog(Actor f) {
+  void getDistances(Actor f) {
     if (f.name.equals("frog")) {
       distFromFrog = dist(f.location.x, f.location.y, location.x, location.y);
-      return distFromFrog;
+      return;
     }
     println("Frog not found.");
-    return 0;
   }
 
   void checkCollision() {
 
-    if (location.x + body.r/2 > width) { // RIGHT
-      location.x = width - body.r/2;
+    if (location.x + r/2 > width) { // RIGHT
+      location.x = width - r/2;
       setDirection(-1, random(-1, 1));
     }
-    if (location.x - body.r/2 < 0) { // LEFT
-      location.x = body.r/2;
+    if (location.x - r/2 < 0) { // LEFT
+      location.x = r/2;
       setDirection(1, random(-1, 1));
     }
-    if (location.y + body.r > height) { // BOTTOM
-      location.y = height - body.r;
+    if (location.y + r > height) { // BOTTOM
+      location.y = height - r;
       setDirection(random(-1, 1), -1);
     }
-    if (location.y - body.r/2 < 0) { // TOP
-      location.y = body.r/2;
+    if (location.y - r/2 < 0) { // TOP
+      location.y = r/2;
       setDirection(random(-1, 1), 1);
     }
-    
   }
 
   void death() {
     if (name.equals("wasp") && isAngry) value = -3;
-    
   }
 
   void flipSprite() {
