@@ -30,6 +30,7 @@ final int LEVEL_AMOUNT = 7;
 Level[] levels = new Level[7];
 
 int currentLevel = 1; // 0 - 6 levels
+int waspsEaten;
 
 float dt;
 float prevTime = 0;
@@ -73,7 +74,11 @@ void draw() {
 
   image(swamp, 0, 0);
 
-  levels[currentLevel].update();
+  if (!isPaused) {
+
+    levels[currentLevel].update();
+  }
+
   levels[currentLevel].draw();
 }
 
@@ -86,18 +91,27 @@ void calcDeltaTime() {
 }
 
 void keyPressed() {
+  if (!isPaused) {
 
-  if (key == '>') {
-    currentLevel++;
-    if (currentLevel >= levels.length) currentLevel = 0;
-    levels[currentLevel].popups.add(new Popup(width,height, Integer.toString(currentLevel), 40.0));
+    if (key == '>') {
+      currentLevel++;
+      if (currentLevel >= levels.length) currentLevel = 0;
+      levels[currentLevel].popups.add(new Popup(width, height, Integer.toString(currentLevel), 40.0));
+    }
+  }
+  if (key == 'p') {
+    isPaused = !isPaused;
   }
 }
 
 void mousePressed() {
-  levels[currentLevel].mousePressed();
+  if (!isPaused) {
+    levels[currentLevel].mousePressed();
+  }
 }
 
 void mouseReleased() {
-  levels[currentLevel].mouseReleased();
+  if (!isPaused) {
+    levels[currentLevel].mouseReleased();
+  }
 }

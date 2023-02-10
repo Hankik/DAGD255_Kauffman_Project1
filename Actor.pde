@@ -29,6 +29,12 @@ class Actor {
     //components.forEach((name, c) -> c.update()); // Procesing 3 can't do lambda expressions
     for (Map.Entry<String, Component> entry : components.entrySet()) {
       entry.getValue().update(x, y);
+      
+      if (entry.getValue().components.size() > 0){ // if component has sub-components, update them too
+        for (Map.Entry<String, Component> subEntry : entry.getValue().components.entrySet()) {
+          subEntry.getValue().update(x, y);
+        }
+      }
     }
   }
   
@@ -38,6 +44,12 @@ class Actor {
     for (Map.Entry<String, Component> entry : components.entrySet()) {
     
       entry.getValue().draw(x, y);
+      
+      if (entry.getValue().components.size() > 0){ // if component has sub-components draw them too
+        for (Map.Entry<String, Component> subEntry : entry.getValue().components.entrySet()) {
+          subEntry.getValue().draw(x, y);
+        }
+      }
     }
   }
   

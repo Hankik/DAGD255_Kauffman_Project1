@@ -14,14 +14,24 @@ class Effects extends Component {
 
   void update(float _x, float _y) {
 
-    for (Map.Entry<String, Timer> entry : effectTimers.entrySet()) {
+    try {
+      for (Map.Entry<String, Timer> entry : effectTimers.entrySet()) {
 
-      entry.getValue().update();
-      if (entry.getValue().isDone) { // if timer is done, remove effect
+        entry.getValue().update();
+        if (entry.getValue().isDone) { // if timer is done, remove effect
 
-        effects.remove(entry.getKey());
-        effectTimers.remove(entry.getKey());
+          // use debuffs to remove effects within this class
+          if (entry.getKey().equals("pondskipper")) give("pondskipperCD", 1.0);
+          
+          
+          effects.remove(entry.getKey());
+          effectTimers.remove(entry.getKey());
+        }
       }
+    }
+    catch (Exception e) {
+
+      println(e);
     }
   }
 
@@ -51,6 +61,15 @@ class Effects extends Component {
     case "largeSpeedBoost":
       parent.speed += 150;
       break;
+    case "pondskipper":
+      if (parent instanceof Frog) {
+        ((Frog) parent).setTipSize(16);
+      }
+      break;
+    case "pondskipperCD":
+      if (parent instanceof Frog) {
+        ((Frog) parent).setTipSize(8);
+      }
     }
   }
 }

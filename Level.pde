@@ -40,7 +40,8 @@ class Level {
 
     case 3:
 
-      bugAmount = 30;
+      bugAmount = 2;
+      bugSpawns.put("pondskipper", 100);
       break;
 
     case 4:
@@ -104,10 +105,10 @@ class Level {
   void mouseReleased() {
     frog.mouseReleased();
     if (frog.tongue.state == TongueState.ATTACK) { // only do if tongue was pulled
-      for (Bug fly : bugList) {
-        if (fly.body.checkCollision(fly.location.x, fly.location.y, mouseX, mouseY)) {
-          frog.tongue.target = fly; // frog tongue can only target one at a time. 
-          fly.mouseReleased();
+      for (Bug b : bugList) {
+        if (b.body.checkCollision(b.location.x, b.location.y, mouseX, mouseY, frog.getTipSize() )) {
+          frog.tongue.target = b; // frog tongue can only target one at a time. 
+          b.mouseReleased();
           break; // this break prevents pulling multiple at the same time
         }
       }
@@ -118,9 +119,11 @@ class Level {
     for (int i = bugList.size() - 1; i >= 0; i--) {
       if (bugList.get(i).isDead) {
 
+        frog.eatBug( bugList.get(i) );
         if (bugList.get(i).name.equals("wasp")) for (Bug b : bugList) if (b.name.equals("wasp")) b.getAngry(); // if dead bug is a wasp, find all wasps and make them angry
         popups.add(new Popup(bugList.get(i).location.x, bugList.get(i).location.y, Float.toString(bugList.get(i).value), 20));
 
+        frog.tongue.tongueLength = 0; // fixes tongueLength artifact
         bugList.remove(i);
       }
     }
