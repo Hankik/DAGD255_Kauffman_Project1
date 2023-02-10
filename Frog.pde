@@ -3,11 +3,12 @@ class Frog extends Actor {
   // variables
   PImage frogShut = loadImage("frog3.png"); // image size is 1024 x 1024 pixels
   PImage frogOpen = loadImage("frog4.png");
-
   ArrayList<Particle> particles = new ArrayList();
   Circle body = new Circle(this, 32);
   FrogTongue tongue = new FrogTongue(this);
   Effects effects = new Effects(this);
+  String prevBug = "";
+  int successiveBugs = 0;
 
 
   // constructor
@@ -80,6 +81,14 @@ class Frog extends Actor {
       Particle p = new Particle(location.x, location.y, random(35, 55), new PVector( random(-1, 1), random(-1, 1) ).normalize(), .7);
       particles.add(p);
     }
+    
+    if (prevBug.equals(b.name)) {
+    
+      successiveBugs++;
+    } else {
+      successiveBugs = 1;
+    }
+    prevBug = b.name;
   }
 
   void mouseReleased() {

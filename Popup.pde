@@ -2,7 +2,7 @@ class Popup extends Actor {
 
   // variables
   String text = "";
-  float textSize = 35;
+  float textSize = 25;
   Timer timer = new Timer(.4);
   boolean isDead = false;
 

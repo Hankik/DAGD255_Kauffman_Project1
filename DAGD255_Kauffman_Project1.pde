@@ -26,16 +26,18 @@ import java.util.HashMap;
 // Initialize global objects
 Data data = Data.getInstance();
 
-final int LEVEL_AMOUNT = 7;
-Level[] levels = new Level[7];
+final int LEVEL_AMOUNT = 2;
+Level[] levels = new Level[2];
 
-int currentLevel = 1; // 0 - 6 levels
+int currentLevel = 1; // 0 - 1 levels
 int waspsEaten;
 
 float dt;
 float prevTime = 0;
-boolean isPaused = false;
 PImage swamp;
+
+boolean isPaused = false;
+boolean leftPressed = false;
 
 // Color constants
 final color RED = #bf616a;
@@ -63,7 +65,7 @@ void setup() {
 
   frameRate(120);
   swamp = loadImage("swamp.jpg");
-  swamp.resize(1200, 800);
+  swamp.resize(width, height);
 }
 
 // Primary game loop
@@ -80,6 +82,9 @@ void draw() {
   }
 
   levels[currentLevel].draw();
+  if (isPaused){
+    levels[currentLevel].updateMenu(); // update and draw level menu seperately
+  }
 }
 
 // A method to get delta time
@@ -99,7 +104,7 @@ void keyPressed() {
       levels[currentLevel].popups.add(new Popup(width*.25, height*.25, "Level: " + Integer.toString(currentLevel), 40.0));
     }
   }
-  if (key == 'p') {
+  if (key == TAB) {
     isPaused = !isPaused;
   }
 }
@@ -107,11 +112,17 @@ void keyPressed() {
 void mousePressed() {
   if (!isPaused) {
     levels[currentLevel].mousePressed();
+    
+    
   }
+  if (mouseButton == LEFT) leftPressed = true;
 }
 
 void mouseReleased() {
   if (!isPaused) {
     levels[currentLevel].mouseReleased();
+    
+    
   }
+  if (mouseButton == LEFT) leftPressed = false;
 }

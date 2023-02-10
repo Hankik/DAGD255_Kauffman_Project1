@@ -3,8 +3,14 @@ class Level {
   // variables
   int name;
   int bugAmount;
+  int waveSize = 1;
+  float xp = 0;
+  float xpTotal = 0;
+  Menu menu = new Menu();
   Frog frog = new Frog();
-  HashMap<String, Integer> bugSpawns = new HashMap(); // keeps track of which enemies to spawn and at what percent
+  Timer spawnTimer = new Timer(10);
+  Timer gameOverTimer;
+  ArrayList<String> spawns = new ArrayList();
   ArrayList<Bug> bugList = new ArrayList();
   ArrayList<Popup> popups = new ArrayList();
 
@@ -13,62 +19,38 @@ class Level {
     this.name = name;
 
     switch (name) {
-    case 0: // LEVEL 1
+    case 0: // Timed mode
 
+      gameOverTimer = new Timer(60);
+      
+      addSpawns("fly", 1);
+      addSpawns("wasp", 1);
+      addSpawns("dragonfly",1);
+      addSpawns("pondskipper",1);
       bugAmount = 20;
-      bugSpawns.put("fly", 75); // 75% chance to spawn fly
-      bugSpawns.put("pondskipper", 25); // 75% + 25% chance to spawn pondskipper
       break;
 
-    case 1: // LEVEL 2... And so on
+    case 1: // Endless mode
 
+
+      addSpawns("fly", 1);
+      addSpawns("wasp", 1);
       bugAmount = 20;
-      bugSpawns.put("fly", 50); // 50% chance to spawn fly
-      bugSpawns.put("wasp", 0); // 50% + 0% chance to spawn wasp
-      bugSpawns.put("pondskipper", 25); // therefore this is 75% chance
-      bugSpawns.put("dragonfly", 25); // 100%
-      break;
-
-    case 2:
-
-      bugAmount = 30;
-      bugSpawns.put("fly", 25);
-      bugSpawns.put("wasp", 75);
-      //bugSpawns.put("pondskipper", 0);
-      //bugSpawns.put("dragonfly", 0);
-      break;
-
-    case 3:
-
-      bugAmount = 2;
-      bugSpawns.put("pondskipper", 100);
-      break;
-
-    case 4:
-
-      bugAmount = 35;
-      break;
-
-    case 5:
-
-      bugAmount = 40;
-      break;
-
-    case 6:
-
-      bugAmount = 45;
       break;
     }
     
     for (int i = 0; i < bugAmount; i++){
     
-      Bug b = new Bug(bugSpawns);
+      Bug b = new Bug(spawns);
       bugList.add(b);
     }
   }
 
   void update() {
-
+    
+    if (gameOverTimer != null) gameOverTimer.update(); // only spawns if in endless mode
+    spawnTimer.update();
+    
     frog.update();
 
     for (Bug b : bugList) {
@@ -83,10 +65,17 @@ class Level {
     }
 
     cullPopups();
+    
+    if (spawnTimer.isDone) {
+    
+      spawn(waveSize);
+      spawnTimer.reset();
+      
+    }
   }
 
   void draw() {
-
+    
     frog.draw();
 
     for (Bug b : bugList) {
@@ -96,6 +85,20 @@ class Level {
     for (Popup p : popups) {
       p.draw();
     }
+    
+    pushMatrix();
+    fill(0);
+    textSize(35);
+    text((int) xp + "XP", width * .9, 60);
+    textSize(40);
+    if (gameOverTimer != null) text((int) gameOverTimer.timeLeft + "s", width*.5, 60);
+    popMatrix();
+  }
+  
+  void updateMenu(){
+  
+    menu.update();
+    menu.draw();
   }
 
   void mousePressed() {
@@ -114,6 +117,23 @@ class Level {
       }
     }
   }
+  
+  void spawn(float bugAmount){
+  
+    for (int i = 0; i < bugAmount; i++){
+    
+      Bug b = new Bug(spawns);
+      bugList.add(b);
+    }
+  }
+  
+  void addSpawns(String bug, int amount){
+  
+    for (int i = 0; i < amount; i++) {
+    
+      spawns.add(bug);
+    }
+  }
 
   void cullBugs() {
     for (int i = bugList.size() - 1; i >= 0; i--) {
@@ -121,7 +141,10 @@ class Level {
 
         frog.eatBug( bugList.get(i) );
         if (bugList.get(i).name.equals("wasp")) for (Bug b : bugList) if (b.name.equals("wasp")) b.getAngry(); // if dead bug is a wasp, find all wasps and make them angry
-        popups.add(new Popup(bugList.get(i).location.x, bugList.get(i).location.y, Float.toString(bugList.get(i).value), 20));
+        popups.add(new Popup(bugList.get(i).location.x, bugList.get(i).location.y,"+" + (int) bugList.get(i).getValue((int)frog.successiveBugs) + "XP", 20));
+        xp += bugList.get(i).getValue((int)frog.successiveBugs);
+        xpTotal += bugList.get(i).getValue((int)frog.successiveBugs);
+        popups.add(new Popup(width*.05, height*.95, frog.successiveBugs + "x", 20));
 
         frog.tongue.tongueLength = 0; // fixes tongueLength artifact
         bugList.remove(i);

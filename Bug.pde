@@ -16,27 +16,18 @@ class Bug extends Actor {
   boolean isFacingRight = true;
   boolean isAngry = false;
 
-  Bug(HashMap<String, Integer> spawns) {
+  Bug(ArrayList<String> spawns) {
 
     addComponent(body)
       .addComponent(effects);
 
     speed = 30;
 
-    body.setVisibility(true);
-
-    int accumulator = 0; // adds previous spawn chance to the next bug type
-
-    for (Map.Entry<String, Integer> spawn : spawns.entrySet()) {
+    //body.setVisibility(true);
 
 
-      int rand = floor(random(100));
-      if (rand < spawn.getValue() + accumulator) {
-        name = spawn.getKey();
-      } else {
-        accumulator += spawn.getValue();
-      }
-    }
+    int rand = floor( random(0, spawns.size()) );
+    name = spawns.get(rand);
 
     angerImg.resize(24, 24);
 
@@ -49,17 +40,26 @@ class Bug extends Actor {
       defaultValue = 6;
       value = defaultValue;
       break;
+      
     case "fly":
       sprite = loadImage("fly.png");
+      defaultValue = 1;
+      value = defaultValue;
       break;
+      
     case "dragonfly":
       sprite = loadImage("dragonfly.png");
       speed *= 3;
+      defaultValue = 9;
+      value = defaultValue;
       sprite.resize(32, 32);
       break;
+      
     case "pondskipper":
       sprite = loadImage("pondskipper.png");
       sprite.resize(32, 32);
+      defaultValue = 2;
+      value = defaultValue;
       break;
     }
 
@@ -146,6 +146,12 @@ class Bug extends Actor {
       flipSprite();
       break;
     }
+  }
+  
+  float getValue(int n){
+  
+    if (n > 1) return pow(1.2, n) * value;
+    return value;
   }
 
   void getAngry() {
