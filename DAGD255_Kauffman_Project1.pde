@@ -96,7 +96,7 @@ void keyPressed() {
     if (key == '>') {
       currentLevel++;
       if (currentLevel >= levels.length) currentLevel = 0;
-      levels[currentLevel].popups.add(new Popup(width, height, Integer.toString(currentLevel), 40.0));
+      levels[currentLevel].popups.add(new Popup(width*.25, height*.25, "Level: " + Integer.toString(currentLevel), 40.0));
     }
   }
   if (key == 'p') {

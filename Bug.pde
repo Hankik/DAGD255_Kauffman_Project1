@@ -22,7 +22,7 @@ class Bug extends Actor {
       .addComponent(effects);
 
     speed = 30;
-    
+
     body.setVisibility(true);
 
     int accumulator = 0; // adds previous spawn chance to the next bug type
@@ -108,8 +108,11 @@ class Bug extends Actor {
       translate(sprite.width/2, 0);
       scale(-1, 1);
       image(sprite, 0, 0 - r); // if facing left (mirrored) offset x value by not calculating in radius
-    } else image(sprite, 0 - r, 0 - r);
-    if (name.equals("wasp") && isAngry) image(angerImg, 0 - r, 0 - r);
+      if (name.equals("wasp") && isAngry) image(angerImg, 0, 0 - r*2);
+    } else {
+      image(sprite, 0 - r, 0 - r);
+      if (name.equals("wasp") && isAngry) image(angerImg, 0 - r, 0 - r*2);
+    }
 
     popMatrix();
   }

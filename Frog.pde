@@ -1,7 +1,10 @@
 class Frog extends Actor {
 
   // variables
-  PImage sprite = loadImage("frog2.png"); // image size is 64 x 64 pixels
+  PImage frogShut = loadImage("frog3.png"); // image size is 1024 x 1024 pixels
+  PImage frogOpen = loadImage("frog4.png");
+
+  ArrayList<Particle> particles = new ArrayList();
   Circle body = new Circle(this, 32);
   FrogTongue tongue = new FrogTongue(this);
   Effects effects = new Effects(this);
@@ -10,6 +13,8 @@ class Frog extends Actor {
   // constructor
   Frog() {
 
+    frogShut.resize(64, 64);
+    frogOpen.resize(64, 64);
     name = "frog";
     addComponent(body)
       .addComponent(tongue)
@@ -20,14 +25,30 @@ class Frog extends Actor {
 
   void update() {
     super.update(); // perform actor super class updates
+
+    for (Particle p : particles) {
+      p.update();
+    }
+
+    for (int i = particles.size() - 1; i >= 0; i--) {
+
+      if (particles.get(i).lifetime.isDone) particles.remove(i);
+    }
   }
 
   void draw() {
 
     pushMatrix();
-    image(sprite, location.x - r, location.y - r);
+    imageMode(CENTER);
+    if (tongue.state == TongueState.IDLE) image(frogShut, location.x, location.y);
+    else image(frogOpen, location.x, location.y);
     popMatrix();
     super.draw(); // perform actor super class draws
+    
+    for (Particle p : particles) {
+      p.draw();
+    }
+    imageMode(CORNER);
   }
 
   void mousePressed() {
@@ -36,14 +57,14 @@ class Frog extends Actor {
       tongue.state = TongueState.ATTACK;
     }
   }
-  
-  void setTipSize(float size){
-  
+
+  void setTipSize(float size) {
+
     tongue.tipSize = size;
   }
-  
+
   float getTipSize() {
-  
+
     return tongue.tipSize;
   }
 
@@ -51,6 +72,14 @@ class Frog extends Actor {
 
     effects.give(b.name, b.effectDuration);
     println("Frog ate a " + b.name +"!");
+
+    // spawn blood particles
+    int rand = floor(random(5, 8));
+    for (int i = 0; i < rand; i++) {
+
+      Particle p = new Particle(location.x, location.y, random(35, 55), new PVector( random(-1, 1), random(-1, 1) ).normalize(), .7);
+      particles.add(p);
+    }
   }
 
   void mouseReleased() {
@@ -77,7 +106,7 @@ class FrogTongue extends Component {  // NEEDS MORE COMMENTING
 
   void update(float x, float y) {
     handleState(state);
-    
+
     tongueWidth = tipSize*.5;
   }
 
@@ -128,10 +157,8 @@ class FrogTongue extends Component {  // NEEDS MORE COMMENTING
       if (target != null) tongueLength -= dt * .3; // tongue is shortened
       else tongueLength -= dt * 3;
       findTip();
-      println(tongueLength);
       if (tongueLength <= 0 ) { // until gone completely
         this.state = TongueState.IDLE; // and enters idle state
-        println("target removed!");
       }
       break;
     case IDLE:
@@ -158,9 +185,9 @@ class FrogTongue extends Component {  // NEEDS MORE COMMENTING
     } else {
       target = tip;
     }
-    
+
     // fixes odd artifact where tongueLength resets before switching state
-    if ( dist(tip.location.x, tip.location.y, parent.location.x, parent.location.y) < parent.r) tongueLength = 0; 
+    if ( dist(tip.location.x, tip.location.y, parent.location.x, parent.location.y) < parent.r) tongueLength = 0;
   }
 }
 

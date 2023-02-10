@@ -30,7 +30,7 @@ class Popup extends Actor {
     translate(location.x - 20, location.y);
     fill(0);
     textSize(textSize);
-    text( (int) parseFloat(text), 0, 0);
+    text( text, 0, 0);
 
     popMatrix();
   }
