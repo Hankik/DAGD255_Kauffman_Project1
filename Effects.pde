@@ -63,12 +63,10 @@ class Effects extends Component {
       break;
     case "pondskipper":
       if (parent instanceof Frog) {
-        ((Frog) parent).setTipSize(16);
       }
       break;
     case "pondskipperCD":
       if (parent instanceof Frog) {
-        ((Frog) parent).setTipSize(8);
       }
     }
   }

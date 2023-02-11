@@ -19,9 +19,9 @@
  */
 
 // Grab libraries
-import javax.swing.JOptionPane;
 import java.util.Map;
 import java.util.HashMap;
+import processing.sound.*;
 
 // Initialize global objects
 Data data = Data.getInstance();
@@ -29,12 +29,15 @@ Data data = Data.getInstance();
 final int LEVEL_AMOUNT = 2;
 Level[] levels = new Level[2];
 
-int currentLevel = 1; // 0 - 1 levels
+int currentLevel = 0; // 0 - 1 levels
 int waspsEaten;
 
 float dt;
 float prevTime = 0;
 PImage swamp;
+SoundFile crunch;
+SoundFile bgMusic;
+SoundFile select;
 
 boolean isPaused = false;
 boolean leftPressed = false;
@@ -62,6 +65,13 @@ void setup() {
   for (int i = 0; i < LEVEL_AMOUNT; i++) {
     levels[i] = new Level(i);
   }
+  
+  crunch = new SoundFile(this, "handleCoins2.wav");
+  bgMusic = new SoundFile(this, "swampRock.wav");
+  select = new SoundFile(this, "bookFlip3.wav");
+  select.amp(.03);
+  bgMusic.amp(.03);
+  crunch.amp(.05);
 
   frameRate(120);
   swamp = loadImage("swamp.jpg");
@@ -70,6 +80,8 @@ void setup() {
 
 // Primary game loop
 void draw() {
+  
+  if (!bgMusic.isPlaying()) bgMusic.play();
 
   background(BLUE);
   calcDeltaTime();
@@ -104,7 +116,7 @@ void keyPressed() {
       levels[currentLevel].popups.add(new Popup(width*.25, height*.25, "Level: " + Integer.toString(currentLevel), 40.0));
     }
   }
-  if (key == TAB) {
+  if (key == TAB || key == ESC || key == 'p') {
     isPaused = !isPaused;
   }
 }

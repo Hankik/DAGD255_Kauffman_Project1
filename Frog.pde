@@ -7,6 +7,7 @@ class Frog extends Actor {
   Circle body = new Circle(this, 32);
   FrogTongue tongue = new FrogTongue(this);
   Effects effects = new Effects(this);
+  Timer mouthTimer = new Timer(.1);
   String prevBug = "";
   int successiveBugs = 0;
 
@@ -27,6 +28,7 @@ class Frog extends Actor {
   void update() {
     super.update(); // perform actor super class updates
 
+    mouthTimer.update();
     for (Particle p : particles) {
       p.update();
     }
@@ -41,7 +43,7 @@ class Frog extends Actor {
 
     pushMatrix();
     imageMode(CENTER);
-    if (tongue.state == TongueState.IDLE) image(frogShut, location.x, location.y);
+    if (tongue.state == TongueState.IDLE && mouthTimer.isDone) image(frogShut, location.x, location.y);
     else image(frogOpen, location.x, location.y);
     popMatrix();
     super.draw(); // perform actor super class draws
@@ -70,6 +72,8 @@ class Frog extends Actor {
   }
 
   void eatBug(Bug b) {
+    
+    crunch.play();
 
     effects.give(b.name, b.effectDuration);
     println("Frog ate a " + b.name +"!");

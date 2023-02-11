@@ -37,12 +37,12 @@ class Particle {
   void draw(){
   
     pushMatrix();
-    fill(BLUE);
+    fill(RED);
     noStroke();
     translate(x,y);
     imageMode(CENTER);
     if (shape != null) image(shape, 0, 0);
-    else rect(0, 0, 3, 3);
+    else rect(0, 0, random(2,5), random(2,5));
     
     popMatrix();
     imageMode(CORNER);

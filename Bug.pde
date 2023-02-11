@@ -37,28 +37,28 @@ class Bug extends Actor {
       sprite = loadImage("wasp.png");
       sprite.resize(32, 32);
       angerTimer = new Timer(random(6, 8));
-      defaultValue = 6;
+      defaultValue = data.waspStartValue;
       value = defaultValue;
       break;
-      
+
     case "fly":
       sprite = loadImage("fly.png");
-      defaultValue = 1;
+      defaultValue = data.flyStartValue;
       value = defaultValue;
       break;
-      
+
     case "dragonfly":
       sprite = loadImage("dragonfly.png");
       speed *= 3;
-      defaultValue = 9;
+      defaultValue = data.dragonflyStartValue;
       value = defaultValue;
       sprite.resize(32, 32);
       break;
-      
+
     case "pondskipper":
       sprite = loadImage("pondskipper.png");
       sprite.resize(32, 32);
-      defaultValue = 2;
+      defaultValue = data.pondskipperStartValue;
       value = defaultValue;
       break;
     }
@@ -92,8 +92,10 @@ class Bug extends Actor {
     move(direction.x, direction.y);
 
     if (collisionEnabled) checkCollision();
-    if (distFromFrog < 32 && direction.x == 0 && direction.y == 0) {
+    if (distFromFrog < levels[currentLevel].frog.r && direction.x == 0 && direction.y == 0
+      || distFromFrog < levels[currentLevel].frog.r && levels[currentLevel].autoEat) {
 
+      levels[currentLevel].frog.mouthTimer.reset();
       death();
       isDead = true;
     }
@@ -123,33 +125,33 @@ class Bug extends Actor {
 
     switch (spawnSwitcher) {
       case(0): // LEFT
-      location.x = 0 - r/2;
+      location.x = 0 - r;
       location.y = random(height);
       direction = new PVector(1, random(-1, 1));
       break;
       case(1): // RIGHT
-      location.x = width + r/2;
+      location.x = width + r;
       location.y = random(height);
       direction = new PVector(-1, random(-1, 1));
       flipSprite();
       break;
       case(2): // TOP
       location.x = random(width);
-      location.y = 0 - r/2;
+      location.y = 0 - r;
       direction = new PVector(random(-1, 1), 1);
       flipSprite();
       break;
       case(3): // BOTTOM
       location.x = random(width);
-      location.y = height + r/2;
+      location.y = height + r;
       direction = new PVector(random(-1, 1), -1);
       flipSprite();
       break;
     }
   }
-  
-  float getValue(int n){
-  
+
+  float getValue(int n) {
+
     if (n > 1) return pow(1.2, n) * value;
     return value;
   }
@@ -187,20 +189,20 @@ class Bug extends Actor {
 
   void checkCollision() {
 
-    if (location.x + r/2 > width) { // RIGHT
-      location.x = width - r/2;
+    if (location.x + r > width) { // RIGHT
+      location.x = width - r;
       setDirection(-1, random(-1, 1));
     }
-    if (location.x - r/2 < 0) { // LEFT
-      location.x = r/2;
+    if (location.x - r < 0) { // LEFT
+      location.x = r;
       setDirection(1, random(-1, 1));
     }
     if (location.y + r > height) { // BOTTOM
       location.y = height - r;
       setDirection(random(-1, 1), -1);
     }
-    if (location.y - r/2 < 0) { // TOP
-      location.y = r/2;
+    if (location.y - r < 0) { // TOP
+      location.y = r;
       setDirection(random(-1, 1), 1);
     }
   }
